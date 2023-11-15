@@ -57,7 +57,8 @@ THIRD_PARTY_APPS = [
     'django_countries'
 ]
 
-LOCAL_APPS = []
+LOCAL_APPS = ['apps.car_show',
+              ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
