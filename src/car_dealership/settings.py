@@ -57,7 +57,12 @@ THIRD_PARTY_APPS = [
     'django_countries'
 ]
 
-LOCAL_APPS = []
+LOCAL_APPS = ['apps.car_show',
+              'apps.car_model',
+              'apps.buyer',
+              'apps.common',
+              'apps.supplier',
+              'apps.purchase_history']
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
@@ -126,6 +131,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+AUTH_USER_MODEL = 'buyer.Buyer'
 
 
 # Internationalization
