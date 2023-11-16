@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 from apps.common.models import TimeStampedUUIDModel
 
@@ -28,8 +29,10 @@ class CarModel(TimeStampedUUIDModel):
     ]
 
     brand = models.CharField(max_length=255, verbose_name=_("Марка"))
-    weight = models.FloatField(verbose_name=_("Вес"))
-    engine_capacity = models.FloatField(verbose_name=_("Объем двигателя"))
+    weight = models.FloatField(verbose_name=_("Вес"),
+                               validators=[MinValueValidator(0.5), MaxValueValidator(10.0)])
+    engine_capacity = models.FloatField(verbose_name=_("Объем двигателя"),
+                                        validators=[MinValueValidator(1.0), MaxValueValidator(8.0)])
     fuel_type = models.CharField(choices=FUEL_TYPE, verbose_name=_("Тип топлива"))
     gearbox_type = models.CharField(choices=GEARBOX_TYPE, verbose_name=_("Тип коробки передач"))
     car_body = models.CharField(choices=CAR_BODY_TYPE, verbose_name=_("Тип кузова"))

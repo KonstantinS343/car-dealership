@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import MinValueValidator
 
 from apps.common.models import TimeStampedUUIDModel
 
@@ -17,7 +18,10 @@ class PurchasesSalesHistorySupplier(TimeStampedUUIDModel):
                                   on_delete=models.CASCADE,
                                   related_name='purchases_history_supplier_car_model',
                                   verbose_name=_("Модель автомобиля"))
-    final_price = models.FloatField(verbose_name=_("Итоговая цена"))
+    final_price = models.DecimalField(verbose_name=_("Итоговая цена"),
+                                      validators=[MinValueValidator(0.0)],
+                                      max_digits=10,
+                                      decimal_places=2)
 
     class Meta:
         db_table = 'purchases_history_suppliers'
@@ -38,7 +42,10 @@ class PurchasesSalesHistoryСarShow(TimeStampedUUIDModel):
                                   on_delete=models.CASCADE,
                                   related_name='purchases_history_car_show_car_model',
                                   verbose_name=_("Модель автомобиля"))
-    final_price = models.FloatField(verbose_name=_("Итоговая цена"))
+    final_price = models.DecimalField(verbose_name=_("Итоговая цена"),
+                                      validators=[MinValueValidator(0.0)],
+                                      max_digits=10,
+                                      decimal_places=2)
 
     class Meta:
         db_table = 'purchases_history_car_shows'

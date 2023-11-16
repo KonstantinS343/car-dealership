@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
+from django.core.validators import MinValueValidator
 
 import datetime
 
@@ -15,7 +16,9 @@ class Supplier(TimeStampedUUIDModel):
     name = models.CharField(max_length=255, verbose_name=_("Название"))
     country = CountryField(verbose_name=_("Локация"))
     year_foundation = models.IntegerField(_("Год основания"), choices=year_choices())
-    buyer_amount = models.IntegerField(verbose_name=_("Количество покупателей"))
+    buyer_amount = models.IntegerField(verbose_name=_("Количество покупателей"),
+                                       validators=[MinValueValidator(0)],
+                                       default=0)
 
     def __str__(self) -> str:
         return self.name
@@ -35,7 +38,10 @@ class SupplierCarModel(TimeStampedUUIDModel):
                                   on_delete=models.CASCADE,
                                   related_name='car_model_supplier_car_model',
                                   verbose_name=_("Модель автомобиля"))
-    price = models.FloatField(verbose_name=_("Цена"))
+    price = models.DecimalField(verbose_name=_("Цена"),
+                                validators=[MinValueValidator(0.0)],
+                                max_digits=10,
+                                decimal_places=2)
 
     class Meta:
         db_table = 'supplier_cars'

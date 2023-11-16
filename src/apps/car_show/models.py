@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 from apps.common.models import TimeStampedUUIDModel
 
@@ -30,9 +31,15 @@ class CarShow(TimeStampedUUIDModel):
 
     name = models.CharField(max_length=255, verbose_name=_("Название"))
     country = CountryField(verbose_name=_("Локация"))
-    balance = models.FloatField(verbose_name=_("Баланс"), default=0.0)
-    weight = models.FloatField(verbose_name=_("Вес"))
-    engine_capacity = models.FloatField(verbose_name=_("Объем двигателя"))
+    balance = models.DecimalField(verbose_name=_("Баланс"),
+                                  default=0.0,
+                                  max_digits=15,
+                                  decimal_places=2,
+                                  validators=[MinValueValidator(0.0)])
+    weight = models.FloatField(verbose_name=_("Вес"),
+                               validators=[MinValueValidator(0.5), MaxValueValidator(10.0)])
+    engine_capacity = models.FloatField(verbose_name=_("Объем двигателя"),
+                                        validators=[MinValueValidator(1.0), MaxValueValidator(8.0)])
     fuel_type = models.CharField(choices=FUEL_TYPE, verbose_name=_("Тип топлива"))
     gearbox_type = models.CharField(choices=GEARBOX_TYPE, verbose_name=_("Тип коробки передач"))
     car_body = models.CharField(choices=CAR_BODY_TYPE, verbose_name=_("Тип кузова"))
@@ -55,7 +62,8 @@ class CarShowModel(TimeStampedUUIDModel):
                                   on_delete=models.CASCADE,
                                   related_name='car_show_model_car',
                                   verbose_name=_("Модель автомобиля"))
-    model_amount = models.IntegerField(verbose_name=_("Количество автомобилей"))
+    model_amount = models.IntegerField(verbose_name=_("Количество автомобилей"),
+                                       validators=[MinValueValidator(0)])
 
     class Meta:
         db_table = 'cars_show_car_models'
