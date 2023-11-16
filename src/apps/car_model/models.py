@@ -1,8 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-import uuid
-
 from apps.common.models import TimeStampedUUIDModel
 
 
@@ -29,10 +27,6 @@ class CarModel(TimeStampedUUIDModel):
         ('Convertible', _("Кабриолет")),
     ]
 
-    id = models.UUIDField(
-         primary_key=True,
-         default=uuid.uuid4,
-         editable=False)
     brand = models.CharField(max_length=255, verbose_name=_("Марка"))
     weight = models.FloatField(verbose_name=_("Вес"))
     engine_capacity = models.FloatField(verbose_name=_("Объем двигателя"))

@@ -2,8 +2,6 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 
-import uuid
-
 from apps.common.models import TimeStampedUUIDModel
 
 
@@ -30,10 +28,6 @@ class CarShow(TimeStampedUUIDModel):
         ('Convertible', _("Кабриолет")),
     ]
 
-    id = models.UUIDField(
-         primary_key=True,
-         default=uuid.uuid4,
-         editable=False)
     name = models.CharField(max_length=255, verbose_name=_("Название"))
     country = CountryField(verbose_name=_("Локация"))
     balance = models.FloatField(verbose_name=_("Баланс"), default=0.0)
@@ -53,15 +47,11 @@ class CarShow(TimeStampedUUIDModel):
 
 
 class CarShowModel(TimeStampedUUIDModel):
-    id = models.UUIDField(
-         primary_key=True,
-         default=uuid.uuid4,
-         editable=False)
     car_dealership = models.ForeignKey(CarShow,
                                        on_delete=models.CASCADE,
                                        related_name='car_show_model_car_dealership',
                                        verbose_name=_("Автосалон"))
-    car_model = models.ForeignKey('CarModel',
+    car_model = models.ForeignKey('car_model.CarModel',
                                   on_delete=models.CASCADE,
                                   related_name='car_show_model_car',
                                   verbose_name=_("Модель автомобиля"))
@@ -69,5 +59,37 @@ class CarShowModel(TimeStampedUUIDModel):
 
     class Meta:
         db_table = 'cars_show_car_models'
-        verbose_name = _("Автосалон")
-        verbose_name_plural = _("Автосалоны")
+        verbose_name = _("Модель автосалона")
+        verbose_name_plural = _("Модели автосалонов")
+
+
+class UniqueBuyersCarDealership(TimeStampedUUIDModel):
+    car_dealership = models.ForeignKey(CarShow,
+                                       on_delete=models.CASCADE,
+                                       related_name='unique_buyers_car_show',
+                                       verbose_name=_("Автосалон"))
+    buyer = models.ForeignKey('buyer.Buyer',
+                              on_delete=models.CASCADE,
+                              related_name='unique_buyers_car_show_buyer',
+                              verbose_name=_("Покупатель"))
+
+    class Meta:
+        db_table = 'unique_buyers_car_dealerships'
+        verbose_name = _("Уникальный клиент автосалона")
+        verbose_name_plural = _("Уникальные клиенты автосалонов")
+
+
+class CarDealershipSuppliersList(TimeStampedUUIDModel):
+    car_dealership = models.ForeignKey(CarShow,
+                                       on_delete=models.CASCADE,
+                                       related_name='suppliers_list_car_show',
+                                       verbose_name=_("Автосалон"))
+    supplier = models.ForeignKey('supplier.Supplier',
+                                 on_delete=models.CASCADE,
+                                 related_name='suppliers_list_supplier',
+                                 verbose_name=_("Поставщик"))
+
+    class Meta:
+        db_table = 'car_dealerships_suppliers_list'
+        verbose_name = _("Поставщик автосалона")
+        verbose_name_plural = _("Поставщики автосалонов")
