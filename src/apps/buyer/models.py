@@ -15,7 +15,7 @@ class Buyer(TimeStampedUUIDModel):
                                   validators=[MinValueValidator(0.0)])
 
     def __str__(self) -> str:
-        return super().username
+        return self.user.username
 
     class Meta:
         verbose_name = _("Покупатель")
