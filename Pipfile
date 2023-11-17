@@ -20,6 +20,11 @@ coreapi = "*"
 celery = "*"
 flower = "*"
 
+flake8 = "*"
+mypy = "*"
+black = "*"
+pylint = "*"
+
 [dev-packages]
 pytest = "*"
 
