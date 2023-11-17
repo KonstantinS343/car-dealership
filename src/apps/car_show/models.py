@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 from django.core.validators import MaxValueValidator, MinValueValidator
 
-from apps.common.models import TimeStampedUUIDModel
+from apps.common.models import TimeStampedUUIDModel, User
 
 
 class CarShow(TimeStampedUUIDModel):
@@ -29,6 +29,7 @@ class CarShow(TimeStampedUUIDModel):
         ('Convertible', _("Кабриолет")),
     ]
 
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_("Пользователь"))
     name = models.CharField(max_length=255, verbose_name=_("Название"))
     country = CountryField(verbose_name=_("Локация"))
     balance = models.DecimalField(verbose_name=_("Баланс"),

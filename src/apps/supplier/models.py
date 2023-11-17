@@ -5,7 +5,7 @@ from django.core.validators import MinValueValidator
 
 import datetime
 
-from apps.common.models import TimeStampedUUIDModel
+from apps.common.models import TimeStampedUUIDModel, User
 
 
 class Supplier(TimeStampedUUIDModel):
@@ -13,6 +13,7 @@ class Supplier(TimeStampedUUIDModel):
     def year_choices():
         return [(year, year) for year in range(1984, datetime.date.today().year+1)]
 
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_("Пользователь"))
     name = models.CharField(max_length=255, verbose_name=_("Название"))
     country = CountryField(verbose_name=_("Локация"))
     year_foundation = models.IntegerField(_("Год основания"), choices=year_choices())
