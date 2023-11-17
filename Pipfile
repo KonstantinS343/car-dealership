@@ -23,7 +23,7 @@ flower = "*"
 flake8 = "*"
 mypy = "*"
 black = "*"
-pylint = "*"
+pre-commit = "*"
 
 [dev-packages]
 pytest = "*"

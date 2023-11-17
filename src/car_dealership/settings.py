@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from typing import List
 import environ
 import os
 
@@ -49,15 +50,9 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 
-THIRD_PARTY_APPS = [
-    'rest_framework',
-    'debug_toolbar',
-    'drf_yasg',
-    'corsheaders',
-    'django_countries'
-]
+THIRD_PARTY_APPS = ['rest_framework', 'debug_toolbar', 'drf_yasg', 'corsheaders', 'django_countries']
 
-LOCAL_APPS = []
+LOCAL_APPS: List[str] = []
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
@@ -104,7 +99,7 @@ DATABASES = {
         'USER': env('POSTGRES_USER'),
         'PASSWORD': env('POSTGRES_PASSWORD'),
         'HOST': env('HOST'),
-        'PORT': env('PORT')
+        'PORT': env('PORT'),
     },
 }
 
