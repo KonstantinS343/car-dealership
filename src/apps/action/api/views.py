@@ -2,7 +2,7 @@ from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from django.db.models import BaseManager
+from django.db.models import Manager
 
 from .serializers import ActionCarDealershipSerializer
 from apps.action.models import ActionCarDealership
@@ -19,7 +19,7 @@ class ActionCarDealershipViewSet(viewsets.GenericViewSet):
     permission_classes = (IsAuthenticated,)
     serializer_class = ActionCarDealershipSerializer
 
-    def get_queryset(self) -> BaseManager[ActionCarDealership]:
+    def get_queryset(self) -> Manager[ActionCarDealership]:
         """
         Возвращает queryset, модели ActionCarDealership.
 
