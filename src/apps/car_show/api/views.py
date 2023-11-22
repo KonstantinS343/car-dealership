@@ -6,9 +6,9 @@ from rest_framework.decorators import action
 from django.db.utils import IntegrityError
 from django.db.models import Manager
 
-from .serializers import CarShowSerializer, CarShowModelSerializer, UniqueBuyersCarDealershipSerializer
+from .serializers import CarShowSerializer, CarShowModelSerializer, UniqueBuyersCarDealershipSerializer, CarDealershipSuppliersListSerializer
 from .permissions import CarShowPermission
-from apps.car_show.models import CarShow, CarShowModel, UniqueBuyersCarDealership
+from apps.car_show.models import CarShow, CarShowModel, UniqueBuyersCarDealership, CarDealershipSuppliersList
 
 
 class CarShowViewSet(
@@ -37,7 +37,7 @@ class CarShowViewSet(
         else:
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @action(methods=["get"], detail=True)  # type: ignore
+    @action(methods=["get"], detail=True, url_path='cars')  # type: ignore
     def car_shop_cars(self, request, pk=None) -> Response:
         """
         Функция возвращает список автомобилей автосалона, если у автосалона еще нет автомобилей,
@@ -52,16 +52,32 @@ class CarShowViewSet(
         else:
             return Response({"detail": "У данного автосалона нет автомобилей"}, status=status.HTTP_404_NOT_FOUND)
 
+    @action(methods=["get"], detail=True, url_path='suppliers')  # type: ignore
+    def carshop_supplier_list(self, request, pk=None) -> Response:
+        """
+        Функция возвращает список поставщиков автосалона, если у автосалона еще нет поставщиков,
+        то функция возвращает 404 страницу.
+        """
+        suppliers = CarDealershipSuppliersList.objects.filter(car_dealership_id=pk)
 
-class UniqueBuyersCarDealershipViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
-    """
-    ViewSet для работы с уникальными клиентами автосалонов.
+        serializer = CarDealershipSuppliersListSerializer(suppliers, many=True)
 
-    Он позволяет только просматривать клиентов автосалона.
-    """
+        if serializer.data:
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({"detail": "У данного автосалона нет поставщиков"}, status=status.HTTP_404_NOT_FOUND)
 
-    serializer_class = UniqueBuyersCarDealershipSerializer
-    permission_classes = (IsAuthenticated, CarShowPermission)
+    @action(methods=["get"], detail=True, url_path='unique')  # type: ignore
+    def carshop_unique_buyers(self, request, pk=None) -> Response:
+        """
+        Функция возвращает список уникальных клиентов автосалона, если у автосалона еще нет уникальных клиентов,
+        то функция возвращает 404 страницу.
+        """
+        clients = UniqueBuyersCarDealership.objects.filter(car_dealership_id=pk)
 
-    def get_queryset(self) -> Manager[UniqueBuyersCarDealership]:
-        return UniqueBuyersCarDealership.objects.filter(is_active=True)
+        serializer = UniqueBuyersCarDealershipSerializer(clients, many=True)
+
+        if serializer.data:
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({"detail": "У данного автосалона нет поставщиков"}, status=status.HTTP_404_NOT_FOUND)

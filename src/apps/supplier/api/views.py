@@ -37,7 +37,7 @@ class SupplierViewSet(
         else:
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @action(methods=["get"], detail=True)  # type: ignore
+    @action(methods=["get"], detail=True, url_path='cars')  # type: ignore
     def supplier_cars(self, request, pk=None) -> Response:
         """
         Функция возвращает список автомобилей поставщика, если у поставщика еще нет автомобилей,
@@ -52,16 +52,17 @@ class SupplierViewSet(
         else:
             return Response({"detail": "У данного поставщика нет автомобилей"}, status=status.HTTP_404_NOT_FOUND)
 
+    @action(methods=["get"], detail=True, url_path='unique')  # type: ignore
+    def carshop_unique_buyers(self, request, pk=None) -> Response:
+        """
+        Функция возвращает список уникальных клиентов поставщика, если у автосалона еще нет уникальных поставщика,
+        то функция возвращает 404 страницу.
+        """
+        clients = UniqueBuyersSuppliers.objects.filter(supplier_id=pk)
 
-class UniqueBuyersSuppliersViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
-    """
-    ViewSet для работы с уникальными клиентами поставщика.
+        serializer = UniqueBuyersSuppliersSerializer(clients, many=True)
 
-    Он позволяет только просматривать клиентов поставщика.
-    """
-
-    serializer_class = UniqueBuyersSuppliersSerializer
-    permission_classes = (IsAuthenticated, SupplierPermission)
-
-    def get_queryset(self) -> Manager[UniqueBuyersSuppliers]:
-        return UniqueBuyersSuppliers.objects.filter(is_active=True)
+        if serializer.data:
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({"detail": "У данного поставщика нет уникальных клиентов"}, status=status.HTTP_404_NOT_FOUND)
