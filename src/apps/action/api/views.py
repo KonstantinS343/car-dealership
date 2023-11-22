@@ -1,37 +1,54 @@
-from rest_framework import status, viewsets
+from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 
 from django.db.models import Manager
 
-from .serializers import ActionCarDealershipSerializer
-from apps.action.models import ActionCarDealership
+from typing import List, Any
+
+from .permissions import ActionCarDealershipPermission, ActionSupplierPermission
+from .serializers import ActionCarDealershipSerializer, ActionSupplierSerializer
+from apps.action.models import ActionCarDealership, ActionSupplier
 
 
-class ActionCarDealershipViewSet(viewsets.GenericViewSet):
+class ActionCarDealershipViewSet(
+    mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet
+):
     """
-    ViewSet для работы с акциями автомобильного дилера.
+    ViewSet для работы с акциями автосалона.
 
-    Этот ViewSet обеспечивает функциональность для работы с акциями автомобильного дилера.
     Он предоставляет набор действий для создания, обновления, удаления и просмотра акций.
     """
 
-    permission_classes = (IsAuthenticated,)
     serializer_class = ActionCarDealershipSerializer
 
+    def get_permissions(self) -> List[Any]:
+        self.permission_classes = (IsAuthenticated,)
+        car_show_methods = ('PUT', 'PATCH', 'DELETE', 'POST')
+        if self.request.method in car_show_methods:
+            self.permission_classes = self.permission_classes + (ActionCarDealershipPermission,)  # type: ignore
+        return super(self.__class__, self).get_permissions()
+
     def get_queryset(self) -> Manager[ActionCarDealership]:
-        """
-        Возвращает queryset, модели ActionCarDealership.
+        return ActionCarDealership.objects.filter(is_active=True)
 
-        Фильтруем и возвращаем акции текущего пользователя (представитель автосалона), которые активны, т.е. не были удалены.
-        """
-        return ActionCarDealership.objects.filter(car_dealership__user=self.request.user.id, is_active=True)
 
-    def list(self, request):
-        """
-        Возвращаем список акции текущего пользователя (представитель автосалона).
-        """
-        actions = self.get_queryset()
-        serializer = self.get_serializer(actions, many=True)
+class ActionSupplierViewSet(
+    mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet
+):
+    """
+    ViewSet для работы с акциями поставщика.
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    Он предоставляет набор действий для создания, обновления, удаления и просмотра акций.
+    """
+
+    serializer_class = ActionSupplierSerializer
+
+    def get_permissions(self) -> List[Any]:
+        self.permission_classes = (IsAuthenticated,)
+        car_show_methods = ('PUT', 'PATCH', 'DELETE', 'POST')
+        if self.request.method in car_show_methods:
+            self.permission_classes = self.permission_classes + (ActionSupplierPermission,)  # type: ignore
+        return super(self.__class__, self).get_permissions()
+
+    def get_queryset(self) -> Manager[ActionSupplier]:
+        return ActionSupplier.objects.filter(is_active=True)

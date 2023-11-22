@@ -3,8 +3,8 @@ from rest_framework import permissions
 
 class CarShowPermission(permissions.BasePermission):
     """
-    Класс разрешений, который даёт право на взаимодействие с CarShowViewSet только админу,
-    а также пользователю связанному с автосалоном.
+    Класс разрешений, который даёт право на взаимодействие с CarShowViewSet
+    и UniqueBuyersCarDealership только админу, а также пользователю связанному с автосалоном.
     """
 
     def has_permission(self, request, view):

@@ -6,9 +6,9 @@ from rest_framework.decorators import action
 from django.db.utils import IntegrityError
 from django.db.models import Manager
 
-from .serializers import CarShowSerializer, CarShowModelSerializer
+from .serializers import CarShowSerializer, CarShowModelSerializer, UniqueBuyersCarDealershipSerializer
 from .permissions import CarShowPermission
-from apps.car_show.models import CarShow, CarShowModel
+from apps.car_show.models import CarShow, CarShowModel, UniqueBuyersCarDealership
 
 
 class CarShowViewSet(
@@ -51,3 +51,17 @@ class CarShowViewSet(
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response({"detail": "У данного автосалона нет автомобилей"}, status=status.HTTP_404_NOT_FOUND)
+
+
+class UniqueBuyersCarDealershipViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    ViewSet для работы с уникальными клиентами автосалонов.
+
+    Он позволяет только просматривать клиентов автосалона.
+    """
+
+    serializer_class = UniqueBuyersCarDealershipSerializer
+    permission_classes = (IsAuthenticated, CarShowPermission)
+
+    def get_queryset(self) -> Manager[UniqueBuyersCarDealership]:
+        return UniqueBuyersCarDealership.objects.filter(is_active=True)

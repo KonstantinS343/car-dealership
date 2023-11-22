@@ -26,6 +26,9 @@ urlpatterns = [
     path('api/v1/', include('apps.car_show.urls')),
     path('api/v1/', include('apps.car_model.urls')),
     path('api/v1/', include('apps.supplier.urls')),
+    path('api/v1/', include('apps.buyer.urls')),
+    path('api/v1/', include('apps.action.urls')),
+    path('api/v1/', include('apps.purchase_history.urls')),
 ] + docs_url
 
 

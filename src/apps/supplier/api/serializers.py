@@ -2,9 +2,10 @@ from rest_framework import serializers
 
 from django.shortcuts import get_object_or_404
 
-from apps.supplier.models import Supplier, SupplierCarModel
+from apps.supplier.models import Supplier, SupplierCarModel, UniqueBuyersSuppliers
 from apps.common.models import User
 from apps.car_model.api.serilizers import CarModelSerializer
+from apps.car_show.api.serializers import CarShowSerializer
 
 
 class SupplierSerializer(serializers.ModelSerializer):
@@ -46,4 +47,22 @@ class SupplierCarModelSerializer(serializers.ModelSerializer):
             'supplier',
             'car_model',
             'price',
+        )
+
+
+class UniqueBuyersSuppliersSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для работы уникальными покупателями поставщиков.
+
+    Этот сериализатор предоставляет функциональность для работы с моделью UniqueBuyersSuppliers.
+    """
+
+    supplier = SupplierSerializer(read_only=True)
+    car_dealership = CarShowSerializer(read_only=True)
+
+    class Meta:
+        model = UniqueBuyersSuppliers
+        fields = (
+            'supplier',
+            'car_dealership',
         )

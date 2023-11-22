@@ -6,9 +6,9 @@ from rest_framework.decorators import action
 from django.db.utils import IntegrityError
 from django.db.models import Manager
 
-from .serializers import SupplierSerializer, SupplierCarModelSerializer
+from .serializers import SupplierSerializer, SupplierCarModelSerializer, UniqueBuyersSuppliersSerializer
 from .permissions import SupplierPermission
-from apps.supplier.models import Supplier, SupplierCarModel
+from apps.supplier.models import Supplier, SupplierCarModel, UniqueBuyersSuppliers
 
 
 class SupplierViewSet(
@@ -51,3 +51,17 @@ class SupplierViewSet(
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response({"detail": "У данного поставщика нет автомобилей"}, status=status.HTTP_404_NOT_FOUND)
+
+
+class UniqueBuyersSuppliersViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    ViewSet для работы с уникальными клиентами поставщика.
+
+    Он позволяет только просматривать клиентов поставщика.
+    """
+
+    serializer_class = UniqueBuyersSuppliersSerializer
+    permission_classes = (IsAuthenticated, SupplierPermission)
+
+    def get_queryset(self) -> Manager[UniqueBuyersSuppliers]:
+        return UniqueBuyersSuppliers.objects.filter(is_active=True)

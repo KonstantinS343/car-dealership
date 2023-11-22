@@ -2,9 +2,10 @@ from rest_framework import serializers
 
 from django.shortcuts import get_object_or_404
 
-from apps.car_show.models import CarShow, CarShowModel
+from apps.car_show.models import CarShow, CarShowModel, UniqueBuyersCarDealership
 from apps.common.models import User
 from apps.car_model.api.serilizers import CarModelSerializer
+from apps.buyer.api.serializers import BuyerSerializer
 
 
 class CarShowSerializer(serializers.ModelSerializer):
@@ -53,4 +54,22 @@ class CarShowModelSerializer(serializers.ModelSerializer):
             'car_dealership',
             'car_model',
             'model_amount',
+        )
+
+
+class UniqueBuyersCarDealershipSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для работы уникальными покупателями автосалонов.
+
+    Этот сериализатор предоставляет функциональность для работы с моделью UniqueBuyersCarDealership.
+    """
+
+    buyer = BuyerSerializer(read_only=True)
+    car_dealership = CarShowSerializer(read_only=True)
+
+    class Meta:
+        model = UniqueBuyersCarDealership
+        fields = (
+            'buyer',
+            'car_dealership',
         )
