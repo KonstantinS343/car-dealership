@@ -1,11 +1,11 @@
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
-from apps.car_model.models import CarModel
-from .serilizers import CarModelSerializer
+from apps.car_model.models import Car
+from .serilizers import CarSerializer
 
 
-class CarViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+class CarViewSet(viewsets.ReadOnlyModelViewSet):
     """
     ViewSet для работы с авто.
 
@@ -13,6 +13,6 @@ class CarViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.Gene
     Он предоставляет функцию просмотра всех автомобилей, а также конкретной модели.
     """
 
-    queryset = CarModel.objects.filter(is_active=True)
+    queryset = Car.objects.filter(is_active=True)
     permission_classes = (IsAuthenticated,)
-    serializer_class = CarModelSerializer
+    serializer_class = CarSerializer

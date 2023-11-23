@@ -1,4 +1,4 @@
-from rest_framework import viewsets, mixins, status
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
@@ -11,9 +11,7 @@ from .permissions import SupplierPermission
 from apps.supplier.models import Supplier, SupplierCarModel, UniqueBuyersSuppliers
 
 
-class SupplierViewSet(
-    mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet
-):
+class SupplierViewSet(viewsets.ModelViewSet):
     """
     ViewSet для работы с поставщиками.
 
@@ -49,8 +47,7 @@ class SupplierViewSet(
 
         if serializer.data:
             return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response({"detail": "У данного поставщика нет автомобилей"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"detail": "У данного поставщика нет автомобилей"}, status=status.HTTP_404_NOT_FOUND)
 
     @action(methods=["get"], detail=True, url_path='unique')  # type: ignore
     def carshop_unique_buyers(self, request, pk=None) -> Response:
@@ -64,5 +61,4 @@ class SupplierViewSet(
 
         if serializer.data:
             return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response({"detail": "У данного поставщика нет уникальных клиентов"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"detail": "У данного поставщика нет уникальных клиентов"}, status=status.HTTP_404_NOT_FOUND)

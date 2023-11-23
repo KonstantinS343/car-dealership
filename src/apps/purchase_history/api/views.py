@@ -37,8 +37,7 @@ class PurchasesSalesHistoryСarShowViewSet(viewsets.GenericViewSet):
 
         if serializer.data:
             return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response({"detail": "У данного автосалона пустая история"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"detail": "У данного автосалона пустая история"}, status=status.HTTP_404_NOT_FOUND)
 
     @action(methods=["get"], detail=True, url_path='buyer', permission_classes=[IsAuthenticated, BuyerPurchasesSalesHistoryСarShowPermission])  # type: ignore
     def buyer_history(self, request, pk=None) -> Response:
@@ -52,8 +51,7 @@ class PurchasesSalesHistoryСarShowViewSet(viewsets.GenericViewSet):
 
         if serializer.data:
             return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response({"detail": "У данного клинета пустая история"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"detail": "У данного клинета пустая история"}, status=status.HTTP_404_NOT_FOUND)
 
 
 class PurchasesSalesHistorySupplierViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):

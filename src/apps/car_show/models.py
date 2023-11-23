@@ -29,18 +29,12 @@ class CarShow(TimeStampedUUIDModel):
         ('Convertible', _("Кабриолет")),
     ]
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_("Пользователь"))
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_("Пользователь"))
     name = models.CharField(max_length=255, verbose_name=_("Название"))
     country = CountryField(verbose_name=_("Локация"))
-    balance = models.DecimalField(verbose_name=_("Баланс"),
-                                  default=0.0,
-                                  max_digits=15,
-                                  decimal_places=2,
-                                  validators=[MinValueValidator(0.0)])
-    weight = models.FloatField(verbose_name=_("Вес"),
-                               validators=[MinValueValidator(0.5), MaxValueValidator(10.0)])
-    engine_capacity = models.FloatField(verbose_name=_("Объем двигателя"),
-                                        validators=[MinValueValidator(1.0), MaxValueValidator(8.0)])
+    balance = models.DecimalField(verbose_name=_("Баланс"), default=0.0, max_digits=15, decimal_places=2, validators=[MinValueValidator(0.0)])
+    weight = models.FloatField(verbose_name=_("Вес"), validators=[MinValueValidator(0.5), MaxValueValidator(10.0)])
+    engine_capacity = models.FloatField(verbose_name=_("Объем двигателя"), validators=[MinValueValidator(1.0), MaxValueValidator(8.0)])
     fuel_type = models.CharField(choices=FUEL_TYPE, verbose_name=_("Тип топлива"))
     gearbox_type = models.CharField(choices=GEARBOX_TYPE, verbose_name=_("Тип коробки передач"))
     car_body = models.CharField(choices=CAR_BODY_TYPE, verbose_name=_("Тип кузова"))
@@ -55,16 +49,9 @@ class CarShow(TimeStampedUUIDModel):
 
 
 class CarShowModel(TimeStampedUUIDModel):
-    car_dealership = models.ForeignKey(CarShow,
-                                       on_delete=models.CASCADE,
-                                       related_name='car_show_model_car_dealership',
-                                       verbose_name=_("Автосалон"))
-    car_model = models.ForeignKey('car_model.CarModel',
-                                  on_delete=models.CASCADE,
-                                  related_name='car_show_model_car',
-                                  verbose_name=_("Модель автомобиля"))
-    model_amount = models.IntegerField(verbose_name=_("Количество автомобилей"),
-                                       validators=[MinValueValidator(0)])
+    car_dealership = models.ForeignKey(CarShow, on_delete=models.CASCADE, related_name='car_show_model_car_dealership', verbose_name=_("Автосалон"))
+    car_model = models.ForeignKey('car_model.Car', on_delete=models.CASCADE, related_name='car_show_model_car', verbose_name=_("Модель автомобиля"))
+    model_amount = models.IntegerField(verbose_name=_("Количество автомобилей"), validators=[MinValueValidator(0)])
 
     class Meta:
         db_table = 'cars_show_car_models'
@@ -73,14 +60,8 @@ class CarShowModel(TimeStampedUUIDModel):
 
 
 class UniqueBuyersCarDealership(TimeStampedUUIDModel):
-    car_dealership = models.ForeignKey(CarShow,
-                                       on_delete=models.CASCADE,
-                                       related_name='unique_buyers_car_show',
-                                       verbose_name=_("Автосалон"))
-    buyer = models.ForeignKey('buyer.Buyer',
-                              on_delete=models.CASCADE,
-                              related_name='unique_buyers_car_show_buyer',
-                              verbose_name=_("Покупатель"))
+    car_dealership = models.ForeignKey(CarShow, on_delete=models.CASCADE, related_name='unique_buyers_car_show', verbose_name=_("Автосалон"))
+    buyer = models.ForeignKey('buyer.Buyer', on_delete=models.CASCADE, related_name='unique_buyers_car_show_buyer', verbose_name=_("Покупатель"))
 
     class Meta:
         db_table = 'unique_buyers_car_dealerships'
@@ -89,14 +70,8 @@ class UniqueBuyersCarDealership(TimeStampedUUIDModel):
 
 
 class CarDealershipSuppliersList(TimeStampedUUIDModel):
-    car_dealership = models.ForeignKey(CarShow,
-                                       on_delete=models.CASCADE,
-                                       related_name='suppliers_list_car_show',
-                                       verbose_name=_("Автосалон"))
-    supplier = models.ForeignKey('supplier.Supplier',
-                                 on_delete=models.CASCADE,
-                                 related_name='suppliers_list_supplier',
-                                 verbose_name=_("Поставщик"))
+    car_dealership = models.ForeignKey(CarShow, on_delete=models.CASCADE, related_name='suppliers_list_car_show', verbose_name=_("Автосалон"))
+    supplier = models.ForeignKey('supplier.Supplier', on_delete=models.CASCADE, related_name='suppliers_list_supplier', verbose_name=_("Поставщик"))
 
     class Meta:
         db_table = 'car_dealerships_suppliers_list'

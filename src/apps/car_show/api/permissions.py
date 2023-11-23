@@ -8,6 +8,4 @@ class CarShowPermission(permissions.BasePermission):
     """
 
     def has_permission(self, request, view):
-        if request.user.is_superuser or request.user.user_type == 2:
-            return True
-        return False
+        return request.user.is_superuser or request.user.user_type == 2

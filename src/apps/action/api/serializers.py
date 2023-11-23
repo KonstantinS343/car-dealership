@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from apps.action.models import ActionCarDealership, ActionSupplier
 from apps.car_show.api.serializers import CarShowSerializer
-from apps.car_model.api.serilizers import CarModelSerializer
+from apps.car_model.api.serilizers import CarSerializer
 from apps.supplier.api.serializers import SupplierSerializer
 
 
@@ -14,7 +14,7 @@ class ActionCarDealershipSerializer(serializers.ModelSerializer):
     """
 
     car_dealership = CarShowSerializer(read_only=True)
-    car_model = CarModelSerializer(read_only=True)
+    car_model = CarSerializer(read_only=True)
 
     class Meta:
         model = ActionCarDealership
@@ -37,7 +37,7 @@ class ActionSupplierSerializer(serializers.ModelSerializer):
     """
 
     supplier = SupplierSerializer(read_only=True)
-    car_model = CarModelSerializer(read_only=True)
+    car_model = CarSerializer(read_only=True)
 
     class Meta:
         model = ActionSupplier

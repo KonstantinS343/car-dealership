@@ -8,9 +8,7 @@ class CarShopPurchasesSalesHistoryСarShowPermission(permissions.BasePermission)
     """
 
     def has_permission(self, request, view):
-        if request.user.is_superuser or request.user.user_type == 2:
-            return True
-        return False
+        return request.user.is_superuser or request.user.user_type == 2
 
 
 class BuyerPurchasesSalesHistoryСarShowPermission(permissions.BasePermission):
@@ -20,9 +18,7 @@ class BuyerPurchasesSalesHistoryСarShowPermission(permissions.BasePermission):
     """
 
     def has_permission(self, request, view):
-        if request.user.is_superuser or request.user.user_type == 1:
-            return True
-        return False
+        return request.user.is_superuser or request.user.user_type == 1
 
 
 class PurchasesSalesHistorySupplierPermission(permissions.BasePermission):
@@ -32,6 +28,4 @@ class PurchasesSalesHistorySupplierPermission(permissions.BasePermission):
     """
 
     def has_permission(self, request, view):
-        if request.user.is_superuser or request.user.user_type == 3:
-            return True
-        return False
+        return request.user.is_superuser or request.user.user_type == 3

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from apps.car_show.api.serializers import CarShowSerializer
-from apps.car_model.api.serilizers import CarModelSerializer
+from apps.car_model.api.serilizers import CarSerializer
 from apps.supplier.api.serializers import SupplierSerializer
 from apps.buyer.api.serializers import BuyerSerializer
 from apps.purchase_history.models import PurchasesSalesHistoryСarShow, PurchasesSalesHistorySupplier
@@ -15,7 +15,7 @@ class PurchasesSalesHistoryСarShowSerializer(serializers.ModelSerializer):
     """
 
     car_dealership = CarShowSerializer(read_only=True)
-    car_model = CarModelSerializer(read_only=True)
+    car_model = CarSerializer(read_only=True)
     buyer = BuyerSerializer(read_only=True)
 
     class Meta:
@@ -37,7 +37,7 @@ class PurchasesSalesHistorySupplierSerializer(serializers.ModelSerializer):
     """
 
     car_dealership = CarShowSerializer(read_only=True)
-    car_model = CarModelSerializer(read_only=True)
+    car_model = CarSerializer(read_only=True)
     supplier = SupplierSerializer(read_only=True)
 
     class Meta:

@@ -1,15 +1,21 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-from .models import CarModel
+from .models import Car
 
 
-class CarModelAdmin(admin.ModelAdmin):
+class CarAdmin(admin.ModelAdmin):
     fieldsets = (
         (_("Класс"), {"fields": ("brand",)}),
-        (_("Активен"), {"fields": ("is_active",), }, ),
         (
-            _("Характеристики"), {
+            _("Активен"),
+            {
+                "fields": ("is_active",),
+            },
+        ),
+        (
+            _("Характеристики"),
+            {
                 "fields": (
                     "weight",
                     "engine_capacity",
@@ -17,7 +23,7 @@ class CarModelAdmin(admin.ModelAdmin):
                     "gearbox_type",
                     "car_body",
                 )
-            }
+            },
         ),
     )
     list_display = ("brand", "car_body", "created_at", "update_at", "is_active")
@@ -26,4 +32,4 @@ class CarModelAdmin(admin.ModelAdmin):
     ordering = ("brand",)
 
 
-admin.site.register(CarModel, CarModelAdmin)
+admin.site.register(Car, CarAdmin)

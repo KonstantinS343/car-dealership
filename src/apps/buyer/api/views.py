@@ -1,4 +1,4 @@
-from rest_framework import viewsets, mixins, status
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
@@ -10,9 +10,7 @@ from .permissions import BuyerPermission
 from apps.buyer.models import Buyer
 
 
-class BuyerViewSet(
-    mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet
-):
+class BuyerViewSet(viewsets.ModelViewSet):
     """
     ViewSet для работы с покупателями.
 

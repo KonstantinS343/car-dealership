@@ -31,9 +31,7 @@ class Supplier(TimeStampedUUIDModel):
 
 class SupplierCarModel(TimeStampedUUIDModel):
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, related_name='supplier_car_model', verbose_name=_("Поставщик"))
-    car_model = models.ForeignKey(
-        'car_model.CarModel', on_delete=models.CASCADE, related_name='car_model_supplier_car_model', verbose_name=_("Модель автомобиля")
-    )
+    car_model = models.ForeignKey('car_model.Car', on_delete=models.CASCADE, related_name='car_model_supplier_car_model', verbose_name=_("Модель автомобиля"))
     price = models.DecimalField(verbose_name=_("Цена"), validators=[MinValueValidator(0.0)], max_digits=10, decimal_places=2)
 
     class Meta:

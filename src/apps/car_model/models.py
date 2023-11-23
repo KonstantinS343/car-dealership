@@ -5,7 +5,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from apps.common.models import TimeStampedUUIDModel
 
 
-class CarModel(TimeStampedUUIDModel):
+class Car(TimeStampedUUIDModel):
     FUEL_TYPE = [
         ('Petrol', _("Бензин")),
         ('Diesel', _("Дизель")),

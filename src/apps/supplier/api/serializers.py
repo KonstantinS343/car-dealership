@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 
 from apps.supplier.models import Supplier, SupplierCarModel, UniqueBuyersSuppliers
 from apps.common.models import User
-from apps.car_model.api.serilizers import CarModelSerializer
+from apps.car_model.api.serilizers import CarSerializer
 
 
 class SupplierSerializer(serializers.ModelSerializer):
@@ -38,7 +38,7 @@ class SupplierCarModelSerializer(serializers.ModelSerializer):
     """
 
     supplier = SupplierSerializer(read_only=True)
-    car_model = CarModelSerializer(read_only=True)
+    car_model = CarSerializer(read_only=True)
 
     class Meta:
         model = SupplierCarModel

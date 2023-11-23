@@ -1,4 +1,4 @@
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
 from django.db.models import Manager
@@ -10,9 +10,7 @@ from .serializers import ActionCarDealershipSerializer, ActionSupplierSerializer
 from apps.action.models import ActionCarDealership, ActionSupplier
 
 
-class ActionCarDealershipViewSet(
-    mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet
-):
+class ActionCarDealershipViewSet(viewsets.ModelViewSet):
     """
     ViewSet для работы с акциями автосалона.
 
@@ -32,9 +30,7 @@ class ActionCarDealershipViewSet(
         return ActionCarDealership.objects.filter(is_active=True)
 
 
-class ActionSupplierViewSet(
-    mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet
-):
+class ActionSupplierViewSet(viewsets.ModelViewSet):
     """
     ViewSet для работы с акциями поставщика.
 

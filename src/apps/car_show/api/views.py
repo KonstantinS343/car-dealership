@@ -1,9 +1,8 @@
-from rest_framework import viewsets, mixins, status
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 
-from django.db.utils import IntegrityError
 from django.db.models import Manager
 
 from .serializers import CarShowSerializer, CarShowModelSerializer, UniqueBuyersCarDealershipSerializer, CarDealershipSuppliersListSerializer
@@ -11,9 +10,7 @@ from .permissions import CarShowPermission
 from apps.car_show.models import CarShow, CarShowModel, UniqueBuyersCarDealership, CarDealershipSuppliersList
 
 
-class CarShowViewSet(
-    mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet
-):
+class CarShowViewSet(viewsets.ModelViewSet):
     """
     ViewSet для работы с автосалонами.
 
@@ -30,12 +27,9 @@ class CarShowViewSet(
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        try:
-            serializer.save()
-        except IntegrityError:
-            return Response({"detail": "Один пользователь не может иметь несколько автосалонов"}, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @action(methods=["get"], detail=True, url_path='cars')  # type: ignore
     def car_shop_cars(self, request, pk=None) -> Response:
@@ -49,8 +43,7 @@ class CarShowViewSet(
 
         if serializer.data:
             return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response({"detail": "У данного автосалона нет автомобилей"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"detail": "У данного автосалона нет автомобилей"}, status=status.HTTP_404_NOT_FOUND)
 
     @action(methods=["get"], detail=True, url_path='suppliers')  # type: ignore
     def carshop_supplier_list(self, request, pk=None) -> Response:
@@ -64,8 +57,7 @@ class CarShowViewSet(
 
         if serializer.data:
             return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response({"detail": "У данного автосалона нет поставщиков"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"detail": "У данного автосалона нет поставщиков"}, status=status.HTTP_404_NOT_FOUND)
 
     @action(methods=["get"], detail=True, url_path='unique')  # type: ignore
     def carshop_unique_buyers(self, request, pk=None) -> Response:
@@ -79,5 +71,4 @@ class CarShowViewSet(
 
         if serializer.data:
             return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response({"detail": "У данного автосалона нет поставщиков"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"detail": "У данного автосалона нет поставщиков"}, status=status.HTTP_404_NOT_FOUND)
