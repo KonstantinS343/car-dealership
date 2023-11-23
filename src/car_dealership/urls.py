@@ -29,6 +29,7 @@ urlpatterns = [
     path('api/v1/', include('apps.buyer.urls')),
     path('api/v1/', include('apps.action.urls')),
     path('api/v1/', include('apps.purchase_history.urls')),
+    path('api/v1/', include('apps.common.urls')),
 ] + docs_url
 
 
