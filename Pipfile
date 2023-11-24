@@ -12,6 +12,7 @@ django_redis = "*"
 django-debug-toolbar = "*"
 django-environ = "*"
 django-countries = "*"
+djangorestframework-simplejwt = "*"
 
 psycopg2-binary = "*"
 
