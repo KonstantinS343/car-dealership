@@ -6,7 +6,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -24,11 +23,15 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='cardealershipsupplierslist',
             name='car_dealership',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='suppliers_list_car_show', to='car_show.carshow', verbose_name='Автосалон'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, related_name='suppliers_list_car_show', to='car_show.carshow', verbose_name='Автосалон'
+            ),
         ),
         migrations.AddField(
             model_name='cardealershipsupplierslist',
             name='supplier',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='suppliers_list_supplier', to='supplier.supplier', verbose_name='Поставщик'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, related_name='suppliers_list_supplier', to='supplier.supplier', verbose_name='Поставщик'
+            ),
         ),
     ]

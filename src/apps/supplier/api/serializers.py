@@ -23,6 +23,9 @@ class SupplierSerializer(serializers.ModelSerializer):
             'year_foundation',
             'buyer_amount',
         )
+        extra_kwargs = {
+            "buyer_amount": {"read_only": True},
+        }
 
     def create(self, validated_data):
         user = get_object_or_404(User, id=self.context["request"].user.id)

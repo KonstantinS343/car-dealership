@@ -5,7 +5,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -19,16 +18,22 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='actionsupplier',
             name='supplier',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='supplier_action', to='supplier.supplier', verbose_name='Поставщик'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, related_name='supplier_action', to='supplier.supplier', verbose_name='Поставщик'
+            ),
         ),
         migrations.AddField(
             model_name='actioncardealership',
             name='car_dealership',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='car_show_action', to='car_show.carshow', verbose_name='Автосалон'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, related_name='car_show_action', to='car_show.carshow', verbose_name='Автосалон'
+            ),
         ),
         migrations.AddField(
             model_name='actioncardealership',
             name='car_model',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='car_show_car_model_action', to='car_model.carmodel', verbose_name='Модель автомобиля'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, related_name='car_show_car_model_action', to='car_model.carmodel', verbose_name='Модель автомобиля'
+            ),
         ),
     ]

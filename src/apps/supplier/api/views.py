@@ -50,7 +50,7 @@ class SupplierViewSet(viewsets.ModelViewSet):
         return Response({"detail": "У данного поставщика нет автомобилей"}, status=status.HTTP_404_NOT_FOUND)
 
     @action(methods=["get"], detail=True, url_path='unique')  # type: ignore
-    def carshop_unique_buyers(self, request, pk=None) -> Response:
+    def supplier_unique_buyers(self, request, pk=None) -> Response:
         """
         Функция возвращает список уникальных клиентов поставщика, если у автосалона еще нет уникальных поставщика,
         то функция возвращает 404 страницу.

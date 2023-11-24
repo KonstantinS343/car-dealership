@@ -6,10 +6,25 @@ from .models import CarShow, CarShowModel, UniqueBuyersCarDealership, CarDealers
 
 class CarShowAdmin(admin.ModelAdmin):
     fieldsets = (
-        (_("Описание"), {"fields": ("name", "country", "balance",)}),
-        (_("Активен"), {"fields": ("is_active",), }, ),
         (
-            _("Характеристики"), {
+            _("Описание"),
+            {
+                "fields": (
+                    "name",
+                    "country",
+                    "balance",
+                )
+            },
+        ),
+        (
+            _("Активен"),
+            {
+                "fields": ("is_active",),
+            },
+        ),
+        (
+            _("Характеристики"),
+            {
                 "fields": (
                     "weight",
                     "engine_capacity",
@@ -17,7 +32,7 @@ class CarShowAdmin(admin.ModelAdmin):
                     "gearbox_type",
                     "car_body",
                 )
-            }
+            },
         ),
     )
     list_display = ("name", "country", "balance", "created_at", "update_at", "is_active")
@@ -31,11 +46,19 @@ class CarShowModelAdmin(admin.ModelAdmin):
         (_("Автосалон"), {"fields": ("car_dealership",)}),
         (_("Модель автомобиля"), {"fields": ("car_model",)}),
         (_("Количество автомобилей"), {"fields": ("model_amount",)}),
-        (_("Активен"), {"fields": ("is_active",), }, ),
+        (
+            _("Активен"),
+            {
+                "fields": ("is_active",),
+            },
+        ),
     )
     list_display = ("car_dealership", "car_model", "model_amount", "created_at", "update_at", "is_active")
     list_filter = ("is_active",)
-    search_fields = ("car_dealership", "car_model",)
+    search_fields = (
+        "car_dealership",
+        "car_model",
+    )
     ordering = ("car_dealership",)
 
 
@@ -43,11 +66,19 @@ class UniqueBuyersCarDealershipAdmin(admin.ModelAdmin):
     fieldsets = (
         (_("Автосалон"), {"fields": ("car_dealership",)}),
         (_("Покупатель"), {"fields": ("buyer",)}),
-        (_("Активен"), {"fields": ("is_active",), }, ),
+        (
+            _("Активен"),
+            {
+                "fields": ("is_active",),
+            },
+        ),
     )
     list_display = ("car_dealership", "buyer", "created_at", "update_at", "is_active")
     list_filter = ("is_active",)
-    search_fields = ("car_dealership", "buyer",)
+    search_fields = (
+        "car_dealership",
+        "buyer",
+    )
     ordering = ("car_dealership",)
 
 
@@ -55,11 +86,19 @@ class CarDealershipSuppliersListAdmin(admin.ModelAdmin):
     fieldsets = (
         (_("Автосалон"), {"fields": ("car_dealership",)}),
         (_("Поставщик"), {"fields": ("supplier",)}),
-        (_("Активен"), {"fields": ("is_active",), }, ),
+        (
+            _("Активен"),
+            {
+                "fields": ("is_active",),
+            },
+        ),
     )
     list_display = ("car_dealership", "supplier", "created_at", "update_at", "is_active")
     list_filter = ("is_active",)
-    search_fields = ("car_dealership", "supplier",)
+    search_fields = (
+        "car_dealership",
+        "supplier",
+    )
     ordering = ("car_dealership",)
 
 

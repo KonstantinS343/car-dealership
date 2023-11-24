@@ -4,13 +4,13 @@ import django.core.validators
 from django.db import migrations, models
 import uuid
 
+from typing import List, Any
+
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies: List[Any] = []
 
     operations = [
         migrations.CreateModel(
@@ -20,7 +20,12 @@ class Migration(migrations.Migration):
                 ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Время создания')),
                 ('update_at', models.DateTimeField(auto_now=True, verbose_name='Время обновления')),
                 ('is_active', models.BooleanField(default=True, verbose_name='Активный')),
-                ('balance', models.DecimalField(decimal_places=2, default=0.0, max_digits=15, validators=[django.core.validators.MinValueValidator(0.0)], verbose_name='Баланс')),
+                (
+                    'balance',
+                    models.DecimalField(
+                        decimal_places=2, default=0.0, max_digits=15, validators=[django.core.validators.MinValueValidator(0.0)], verbose_name='Баланс'
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'Покупатель',
