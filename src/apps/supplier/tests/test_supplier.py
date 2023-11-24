@@ -10,7 +10,9 @@ from django.forms.models import model_to_dict
 import json
 
 from apps.common.models import User
-from apps.supplier.models import Supplier
+from apps.supplier.models import Supplier, SupplierCarModel, UniqueBuyersSuppliers
+from apps.car_model.models import Car
+from apps.car_show.models import CarShow
 
 
 class TestSupplier:
@@ -105,3 +107,35 @@ class TestSupplier:
 
         response = api_client.patch(f"{self.endpoint}{supplier.id}/", new_data, format="json")
         assert response.status_code == 200
+
+    def test_supplier_cars(self) -> None:
+        user = self.init_user()
+        supplier = self.init_supplier(user=user)
+        api_client = self.authenticate_client(user)
+
+        response = api_client.get(f'{self.endpoint}{supplier.id}/cars/')
+
+        assert response.status_code == 404
+
+        G(SupplierCarModel, supplier=supplier, car_model=G(Car))
+
+        response = api_client.get(f'{self.endpoint}{supplier.id}/cars/')
+
+        assert response.status_code == 200
+        assert len(json.loads(response.content)) == 1
+
+    def test_supplier_unique_buyers(self) -> None:
+        user = self.init_user()
+        supplier = self.init_supplier(user=user)
+        api_client = self.authenticate_client(user)
+
+        response = api_client.get(f'{self.endpoint}{supplier.id}/unique/')
+
+        assert response.status_code == 404
+
+        G(UniqueBuyersSuppliers, car_dealership=G(CarShow), supplier=supplier)
+
+        response = api_client.get(f'{self.endpoint}{supplier.id}/unique/')
+
+        assert response.status_code == 200
+        assert len(json.loads(response.content)) == 1
