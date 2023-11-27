@@ -23,6 +23,9 @@ class SupplierViewSet(viewsets.ModelViewSet):
     serializer_class = SupplierSerializer
 
     def get_queryset(self) -> Manager[Supplier]:
+        if getattr(self, "swagger_fake_view", False):
+            # queryset just for schema generation metadata
+            return Supplier.objects.none()
         return Supplier.objects.filter(user=self.request.user, is_active=True)
 
     def create(self, request, *args, **kwargs):

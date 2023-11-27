@@ -16,7 +16,7 @@ from apps.buyer.models import Buyer
 
 class TestPurchasesSalesHistoryСarShow:
     pytestmark = pytest.mark.django_db
-    endpoint = "/api/v1/history/"
+    endpoint = "/api/v1/"
     USER_TYPE = 2
 
     @staticmethod
@@ -58,7 +58,7 @@ class TestPurchasesSalesHistoryСarShow:
         self.init_purchase_history(car_show=car_show)
         api_client = self.authenticate_client(user)
 
-        response = api_client.get(self.endpoint + f'carshow/{car_show.id}/carshop_history/')
+        response = api_client.get(self.endpoint + f'carshow/{car_show.id}/history/')
 
         assert response.status_code == status.HTTP_200_OK
         assert len(json.loads(response.content)) == 1
@@ -69,7 +69,7 @@ class TestPurchasesSalesHistoryСarShow:
         self.init_purchase_history(buyer=buyer)
         api_client = self.authenticate_client(user)
 
-        response = api_client.get(self.endpoint + f'carshow/{buyer.id}/buyer/')
+        response = api_client.get(self.endpoint + f'carshow/{buyer.id}/buyer/history/')
 
         assert response.status_code == status.HTTP_200_OK
         assert len(json.loads(response.content)) == 1

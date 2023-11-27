@@ -22,6 +22,9 @@ class CarShowViewSet(viewsets.ModelViewSet):
     serializer_class = CarShowSerializer
 
     def get_queryset(self) -> Manager[CarShow]:
+        if getattr(self, "swagger_fake_view", False):
+            # queryset just for schema generation metadata
+            return CarShow.objects.none()
         return CarShow.objects.filter(user=self.request.user, is_active=True)
 
     def create(self, request, *args, **kwargs):

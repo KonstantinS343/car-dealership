@@ -10,16 +10,17 @@ from django.forms.models import model_to_dict
 import json
 
 from apps.common.models import User
-from apps.supplier.models import Supplier, SupplierCarModel, UniqueBuyersSuppliers
+from apps.supplier.models import Supplier
 from apps.car_model.models import Car
-from apps.car_show.models import CarShow
+from apps.car_show.models import CarShow, CarShowModel, UniqueBuyersCarDealership, CarDealershipSuppliersList
+from apps.buyer.models import Buyer
 
 
-class TestSupplier:
+class TestCarShow:
     pytestmark = pytest.mark.django_db
-    endpoint = "/api/v1/supplier/"
-    USER_TYPE = 3
-    AMOUNT_SUPPLIER_ATTRIBUTES = 4
+    endpoint = "/api/v1/carshow/"
+    USER_TYPE = 2
+    AMOUNT_CARSHOW_ATTRIBUTES = 8
 
     @staticmethod
     def authenticate_client(user) -> APIClient:
@@ -31,17 +32,17 @@ class TestSupplier:
 
     @staticmethod
     def init_user() -> User:
-        user = G(User, user_type=TestSupplier.USER_TYPE)
+        user = G(User, user_type=TestCarShow.USER_TYPE)
         return user
 
     @staticmethod
-    def init_supplier(user) -> Supplier:
-        supplier = G(Supplier, user=user)
-        return supplier
+    def init_carshow(user) -> Supplier:
+        carshow = G(CarShow, user=user)
+        return carshow
 
     def test_list(self) -> None:
         user = self.init_user()
-        _ = self.init_supplier(user=user)
+        _ = self.init_carshow(user=user)
         api_client = self.authenticate_client(user)
 
         response = api_client.get(self.endpoint)
@@ -51,92 +52,112 @@ class TestSupplier:
 
     def test_retrive(self) -> None:
         user = self.init_user()
-        supplier = self.init_supplier(user=user)
+        carshow = self.init_carshow(user=user)
         api_client = self.authenticate_client(user)
 
-        response = api_client.get(f'{self.endpoint}{supplier.id}/')
+        response = api_client.get(f'{self.endpoint}{carshow.id}/')
 
         assert response.status_code == status.HTTP_200_OK
-        assert len(json.loads(response.content)) == TestSupplier.AMOUNT_SUPPLIER_ATTRIBUTES
+        assert len(json.loads(response.content)) == TestCarShow.AMOUNT_CARSHOW_ATTRIBUTES
 
     def test_create(self) -> None:
         user = self.init_user()
-        supplier = N(Supplier, user=user)
+        carshow = N(CarShow, user=user)
         api_client = self.authenticate_client(user)
 
-        response = api_client.post(f"{self.endpoint}", model_to_dict(supplier))
+        response = api_client.post(f"{self.endpoint}", model_to_dict(carshow))
 
         assert response.status_code == status.HTTP_201_CREATED
 
     def test_delete(self) -> None:
         user = self.init_user()
-        supplier = self.init_supplier(user=user)
+        carshow = self.init_carshow(user=user)
         api_client = self.authenticate_client(user)
 
-        response = api_client.delete(f"{self.endpoint}{supplier.id}/")
+        response = api_client.delete(f"{self.endpoint}{carshow.id}/")
 
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
     def test_update(self) -> None:
         user = self.init_user()
-        supplier = self.init_supplier(user=user)
+        carshow = self.init_carshow(user=user)
         api_client = self.authenticate_client(user)
 
         new_data = {
             "name": "Test",
-            "year_foundation": 2000,
             "country": "AF",
+            "weight": 1.2,
+            "engine_capacity": 2.3,
+            "fuel_type": 'Diesel',
+            "gearbox_type": 'Automatic',
+            "car_body": 'Sedan',
         }
 
-        response = api_client.put(f"{self.endpoint}{supplier.id}/", new_data, format="json")
+        response = api_client.put(f"{self.endpoint}{carshow.id}/", new_data, format="json")
 
         data = json.loads(response.content)
-        del data['buyer_amount']
+        del data['balance']
 
         assert response.status_code == status.HTTP_200_OK
         assert data == new_data
 
     def test_partial_update(self) -> None:
         user = self.init_user()
-        supplier = self.init_supplier(user=user)
+        carshow = self.init_carshow(user=user)
         api_client = self.authenticate_client(user)
 
         new_data = {
             "name": "Test",
-            "year_foundation": 2000,
+            "car_body": 'Sedan',
         }
 
-        response = api_client.patch(f"{self.endpoint}{supplier.id}/", new_data, format="json")
+        response = api_client.patch(f"{self.endpoint}{carshow.id}/", new_data, format="json")
         assert response.status_code == status.HTTP_200_OK
 
     def test_supplier_cars(self) -> None:
         user = self.init_user()
-        supplier = self.init_supplier(user=user)
+        carshow = self.init_carshow(user=user)
         api_client = self.authenticate_client(user)
 
-        response = api_client.get(f'{self.endpoint}{supplier.id}/cars/')
+        response = api_client.get(f'{self.endpoint}{carshow.id}/cars/')
 
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
-        G(SupplierCarModel, supplier=supplier, car_model=G(Car))
+        G(CarShowModel, car_dealership=carshow, car_model=G(Car))
 
-        response = api_client.get(f'{self.endpoint}{supplier.id}/cars/')
+        response = api_client.get(f'{self.endpoint}{carshow.id}/cars/')
 
         assert response.status_code == status.HTTP_200_OK
         assert len(json.loads(response.content)) == 1
 
     def test_supplier_unique_buyers(self) -> None:
         user = self.init_user()
-        supplier = self.init_supplier(user=user)
+        carshow = self.init_carshow(user=user)
         api_client = self.authenticate_client(user)
 
-        response = api_client.get(f'{self.endpoint}{supplier.id}/unique/')
+        response = api_client.get(f'{self.endpoint}{carshow.id}/unique/')
 
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
-        G(UniqueBuyersSuppliers, car_dealership=G(CarShow), supplier=supplier)
+        G(UniqueBuyersCarDealership, car_dealership=carshow, buyer=G(Buyer))
 
-        response = api_client.get(f'{self.endpoint}{supplier.id}/unique/')
+        response = api_client.get(f'{self.endpoint}{carshow.id}/unique/')
+
+        assert response.status_code == status.HTTP_200_OK
+        assert len(json.loads(response.content)) == 1
+
+    def test_list_carshow_suppliers(self) -> None:
+        user = self.init_user()
+        carshow = self.init_carshow(user=user)
+        api_client = self.authenticate_client(user)
+
+        response = api_client.get(f'{self.endpoint}{carshow.id}/suppliers/')
+
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+        G(CarDealershipSuppliersList, car_dealership=carshow, supplier=G(Supplier))
+
+        response = api_client.get(f'{self.endpoint}{carshow.id}/suppliers/')
 
         assert response.status_code == status.HTTP_200_OK
         assert len(json.loads(response.content)) == 1
