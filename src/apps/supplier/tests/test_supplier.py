@@ -45,7 +45,7 @@ class TestSupplier:
 
         response = api_client.get(self.endpoint)
 
-        assert response.status_code == 200
+        assert response.status_code == status.HTTP_200_OK
         assert len(json.loads(response.content)) == 1
 
     def test_retrive(self) -> None:
@@ -55,7 +55,7 @@ class TestSupplier:
 
         response = api_client.get(f'{self.endpoint}{supplier.id}/')
 
-        assert response.status_code == 200
+        assert response.status_code == status.HTTP_200_OK
         assert len(json.loads(response.content)) == 4
 
     def test_create(self) -> None:
@@ -92,7 +92,7 @@ class TestSupplier:
         data = json.loads(response.content)
         del data['buyer_amount']
 
-        assert response.status_code == 200
+        assert response.status_code == status.HTTP_200_OK
         assert data == new_data
 
     def test_partial_update(self) -> None:
@@ -106,7 +106,7 @@ class TestSupplier:
         }
 
         response = api_client.patch(f"{self.endpoint}{supplier.id}/", new_data, format="json")
-        assert response.status_code == 200
+        assert response.status_code == status.HTTP_200_OK
 
     def test_supplier_cars(self) -> None:
         user = self.init_user()
@@ -115,13 +115,13 @@ class TestSupplier:
 
         response = api_client.get(f'{self.endpoint}{supplier.id}/cars/')
 
-        assert response.status_code == 404
+        assert response.status_code == status.HTTP_404_NOT_FOUND
 
         G(SupplierCarModel, supplier=supplier, car_model=G(Car))
 
         response = api_client.get(f'{self.endpoint}{supplier.id}/cars/')
 
-        assert response.status_code == 200
+        assert response.status_code == status.HTTP_200_OK
         assert len(json.loads(response.content)) == 1
 
     def test_supplier_unique_buyers(self) -> None:
@@ -131,11 +131,11 @@ class TestSupplier:
 
         response = api_client.get(f'{self.endpoint}{supplier.id}/unique/')
 
-        assert response.status_code == 404
+        assert response.status_code == status.HTTP_404_NOT_FOUND
 
         G(UniqueBuyersSuppliers, car_dealership=G(CarShow), supplier=supplier)
 
         response = api_client.get(f'{self.endpoint}{supplier.id}/unique/')
 
-        assert response.status_code == 200
+        assert response.status_code == status.HTTP_200_OK
         assert len(json.loads(response.content)) == 1
