@@ -34,7 +34,7 @@ class ActionCarDealershipPostSerializer(serializers.ModelSerializer):
 
 class ActionCarDealershipSerializer(serializers.ModelSerializer):
     """
-    Сериализатор для работы с акциями поставщика.
+    Сериализатор для работы с акциями автосалона.
 
     Этот сериализатор предоставляет функциональность для работы с моделью ActionCarDealership.
     """
@@ -57,7 +57,7 @@ class ActionCarDealershipSerializer(serializers.ModelSerializer):
 
 class ActionSupplierPostSerializer(serializers.ModelSerializer):
     """
-    Сериализатор для работы с акциями автосалона.
+    Сериализатор для работы с акциями поставщика.
 
     Этот сериализатор предназначен для создание модели ActionSupplier.
     """
