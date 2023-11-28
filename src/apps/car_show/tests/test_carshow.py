@@ -62,7 +62,7 @@ class TestCarShow:
 
     def test_create(self) -> None:
         user = self.init_user()
-        carshow = N(CarShow, user=user)
+        carshow = N(CarShow, user=user, engine_capacity=2.0, weight=1.23)
         api_client = self.authenticate_client(user)
 
         response = api_client.post(f"{self.endpoint}", model_to_dict(carshow))

@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.db.utils import IntegrityError
 from django.db.models import Manager
 
-from .serializers import BuyerSerializer
+from .serializers import BuyerSerializer, BuyerUpdateSerializer
 from .permissions import BuyerPermission
 from apps.buyer.models import Buyer
 
@@ -19,7 +19,12 @@ class BuyerViewSet(viewsets.ModelViewSet):
     """
 
     permission_classes = (IsAuthenticated, BuyerPermission)
-    serializer_class = BuyerSerializer
+
+    def get_serializer_class(self):
+        if self.action == 'update' or self.action == 'partial_update':
+            return BuyerUpdateSerializer
+        else:
+            return BuyerSerializer
 
     def get_queryset(self) -> Manager[Buyer]:
         if getattr(self, "swagger_fake_view", False):
