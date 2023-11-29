@@ -38,7 +38,7 @@ class SupplierViewSet(viewsets.ModelViewSet):
         else:
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @action(methods=["get"], detail=True, url_path='cars')  # type: ignore
+    @action(methods=["get"], detail=True, url_path='cars')
     def supplier_cars(self, request, pk=None) -> Response:
         """
         Функция возвращает список автомобилей поставщика, если у поставщика еще нет автомобилей,
@@ -52,7 +52,7 @@ class SupplierViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"detail": "У данного поставщика нет автомобилей"}, status=status.HTTP_404_NOT_FOUND)
 
-    @action(methods=["get"], detail=True, url_path='unique')  # type: ignore
+    @action(methods=["get"], detail=True, url_path='unique')
     def supplier_unique_buyers(self, request, pk=None) -> Response:
         """
         Функция возвращает список уникальных клиентов поставщика, если у автосалона еще нет уникальных поставщика,

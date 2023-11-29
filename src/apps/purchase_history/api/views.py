@@ -36,7 +36,7 @@ class PurchasesSalesHistoryСarShowViewSet(viewsets.GenericViewSet):
             pk = self.kwargs['pk']
             return PurchasesSalesHistoryСarShow.objects.filter(buyer_id=pk, is_active=True)
 
-    @action(methods=["get"], detail=True, url_path='history', permission_classes=[IsAuthenticated, CarShopPurchasesSalesHistoryСarShowPermission])  # type: ignore
+    @action(methods=["get"], detail=True, url_path='history', permission_classes=[IsAuthenticated, CarShopPurchasesSalesHistoryСarShowPermission])
     def carshop_history(self, request, pk=None) -> Response:
         """
         Функция возвращает историю продаж автосалона, если у автосалона еще нет продаж,
@@ -50,7 +50,7 @@ class PurchasesSalesHistoryСarShowViewSet(viewsets.GenericViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"detail": "У данного автосалона пустая история"}, status=status.HTTP_404_NOT_FOUND)
 
-    @action(methods=["get"], detail=True, url_path='buyer/history', permission_classes=[IsAuthenticated, BuyerPurchasesSalesHistoryСarShowPermission])  # type: ignore
+    @action(methods=["get"], detail=True, url_path='buyer/history', permission_classes=[IsAuthenticated, BuyerPurchasesSalesHistoryСarShowPermission])
     def buyer_history(self, request, pk=None) -> Response:
         """
         Функция возвращает историю покупок клиента, если у клиента еще нет покупок,
@@ -81,7 +81,7 @@ class PurchasesSalesHistorySupplierViewSet(viewsets.GenericViewSet):
         pk = self.kwargs['pk']
         return PurchasesSalesHistorySupplier.objects.filter(supplier_id=pk, is_active=True)
 
-    @action(methods=["get"], detail=True, url_path='history', permission_classes=[IsAuthenticated, PurchasesSalesHistorySupplierPermission])  # type: ignore
+    @action(methods=["get"], detail=True, url_path='history', permission_classes=[IsAuthenticated, PurchasesSalesHistorySupplierPermission])
     def supplier_history(self, request, pk=None) -> Response:
         """
         Функция возвращает историю продаж поставщика, если у поставщика еще нет покупок,

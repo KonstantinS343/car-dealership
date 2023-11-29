@@ -1,101 +1,55 @@
 import pytest
 
 from rest_framework import status
-from rest_framework.test import APIClient
-from rest_framework_simplejwt.tokens import RefreshToken
 
-from ddf import G, N
+from ddf import N
 from django.forms.models import model_to_dict
 
 import json
 
-from apps.common.models import User
 from apps.buyer.models import Buyer
+from apps.common.conftest import api_client, user  # noqa
 
 
 class TestBuyer:
     pytestmark = pytest.mark.django_db
     endpoint = "/api/v1/buyer/"
-    USER_TYPE = 1
     AMOUNT_BUYER_ATTRIBUTES = 2
 
-    @staticmethod
-    def authenticate_client(user) -> APIClient:
-        refresh = RefreshToken.for_user(user)
-        api_client = APIClient()
-        api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {refresh.access_token}")
-
-        return api_client
-
-    @staticmethod
-    def init_user() -> User:
-        user = G(User, user_type=TestBuyer.USER_TYPE)
-        return user
-
-    @staticmethod
-    def init_buyer(user) -> Buyer:
-        buyer = G(Buyer, user=user)
-        return buyer
-
-    def test_list(self) -> None:
-        user = self.init_user()
-        _ = self.init_buyer(user=user)
-        api_client = self.authenticate_client(user)
-
+    @pytest.mark.parametrize('user_type', [1])
+    def test_list(self, user_type, api_client, buyer) -> None:
         response = api_client.get(self.endpoint)
 
         assert response.status_code == status.HTTP_200_OK
         assert len(json.loads(response.content)) == 1
 
-    def test_retrive(self) -> None:
-        user = self.init_user()
-        buyer = self.init_buyer(user=user)
-        api_client = self.authenticate_client(user)
-
+    @pytest.mark.parametrize('user_type', [1])
+    def test_retrive(self, user_type, api_client, buyer) -> None:
         response = api_client.get(f'{self.endpoint}{buyer.id}/')
 
         assert response.status_code == status.HTTP_200_OK
         assert len(json.loads(response.content)) == TestBuyer.AMOUNT_BUYER_ATTRIBUTES
 
-    def test_create(self) -> None:
-        user = self.init_user()
+    @pytest.mark.parametrize('user_type', [1])
+    def test_create(self, user_type, api_client, user) -> None:
         buyer = N(Buyer, user=user)
-        api_client = self.authenticate_client(user)
 
         response = api_client.post(f"{self.endpoint}", model_to_dict(buyer))
 
         assert response.status_code == status.HTTP_201_CREATED
 
-    def test_delete(self) -> None:
-        user = self.init_user()
-        buyer = self.init_buyer(user=user)
-        api_client = self.authenticate_client(user)
-
+    @pytest.mark.parametrize('user_type', [1])
+    def test_delete(self, user_type, api_client, buyer) -> None:
         response = api_client.delete(f"{self.endpoint}{buyer.id}/")
 
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
-    def test_update(self) -> None:
-        user = self.init_user()
-        buyer = self.init_buyer(user=user)
-        api_client = self.authenticate_client(user)
-
-        new_data = {
-            "first_name": 'TestName',
-            "last_name": 'TestLastName',
-        }
-
-        response = api_client.put(f"{self.endpoint}{buyer.id}/", new_data, format="json")
+    @pytest.mark.parametrize('user_type', [1])
+    def test_update(self, user_type, api_client, buyer, buyer_update_data) -> None:
+        response = api_client.put(f"{self.endpoint}{buyer.id}/", buyer_update_data, format="json")
         assert response.status_code == status.HTTP_200_OK
 
-    def test_partial_update(self) -> None:
-        user = self.init_user()
-        buyer = self.init_buyer(user=user)
-        api_client = self.authenticate_client(user)
-
-        new_data = {
-            "first_name": 'TestName',
-        }
-
-        response = api_client.patch(f"{self.endpoint}{buyer.id}/", new_data, format="json")
+    @pytest.mark.parametrize('user_type', [1])
+    def test_partial_update(self, user_type, api_client, buyer, buyer_partial_update_data) -> None:
+        response = api_client.patch(f"{self.endpoint}{buyer.id}/", buyer_partial_update_data, format="json")
         assert response.status_code == status.HTTP_200_OK
