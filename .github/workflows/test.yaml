@@ -44,27 +44,18 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r dev-requirements.txt
-
-      - name: Run the tests
-        run: |
-          pytest -v .
-        env:
-          ENGINE: django.db.backends.postgresql
-          POSTGRES_DB: postgres
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: secret
-          HOST: localhost
-          PORT: 5432
-          TIME_ZONE: Europe/Moscow
-          LANGUAGE_CODE: ru
-          DEBUG: true
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-
       
+      - name: Test with pytest
+        run: pytest --junit-xml=test-results.xml
+
       - name: Publish test results
-        uses: dariocurr/pytest-summary@main
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
         with:
-          output: test-summary.md
+          files: |
+            test-results.xml
+            test-results/**/*.xml
+            test-results/**/*.json
         env:
           ENGINE: django.db.backends.postgresql
           POSTGRES_DB: postgres
