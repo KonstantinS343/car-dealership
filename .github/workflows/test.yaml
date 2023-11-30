@@ -65,6 +65,17 @@ jobs:
         uses: dariocurr/pytest-summary@main
         with:
           output: test-summary.md
+        env:
+          ENGINE: django.db.backends.postgresql
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: secret
+          HOST: localhost
+          PORT: 5432
+          TIME_ZONE: Europe/Moscow
+          LANGUAGE_CODE: ru
+          DEBUG: true
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
       
       - name: Upload code coverage to codeclimate
         uses: paambaati/codeclimate-action@v3.2.0
