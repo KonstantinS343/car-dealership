@@ -47,6 +47,17 @@ jobs:
       
       - name: Test with pytest
         run: pytest --junit-xml=test-results.xml
+        env:
+          ENGINE: django.db.backends.postgresql
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: secret
+          HOST: localhost
+          PORT: 5432
+          TIME_ZONE: Europe/Moscow
+          LANGUAGE_CODE: ru
+          DEBUG: true
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
       - name: Publish test results
         uses: EnricoMi/publish-unit-test-result-action@v2
