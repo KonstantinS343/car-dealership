@@ -12,6 +12,7 @@ django_redis = "*"
 django-debug-toolbar = "*"
 django-environ = "*"
 django-countries = "*"
+djangorestframework-simplejwt = "*"
 
 psycopg2-binary = "*"
 
@@ -26,7 +27,8 @@ black = "*"
 pre-commit = "*"
 
 [dev-packages]
-pytest = "*"
+pytest-django = "*"
+django-dynamic-fixture = "*"
 
 [requires]
 python_version = "3.10"

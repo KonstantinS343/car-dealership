@@ -8,7 +8,12 @@ class ActionCarDealershipAdmin(admin.ModelAdmin):
     fieldsets = (
         (_("Акция"), {"fields": ("name", "descritpion")}),
         (_("Скидка"), {"fields": ("discount",)}),
-        (_("Активен"), {"fields": ("is_active",), }, ),
+        (
+            _("Активен"),
+            {
+                "fields": ("is_active",),
+            },
+        ),
         (_("Даты"), {"fields": ("event_start", "event_end")}),
         (_("Зависомость"), {"fields": ("car_dealership", "car_model")}),
     )
@@ -22,7 +27,12 @@ class ActionSupplierAdmin(admin.ModelAdmin):
     fieldsets = (
         (_("Акция"), {"fields": ("name", "descritpion")}),
         (_("Скидка"), {"fields": ("discount",)}),
-        (_("Активен"), {"fields": ("is_active",), }, ),
+        (
+            _("Активен"),
+            {
+                "fields": ("is_active",),
+            },
+        ),
         (_("Даты"), {"fields": ("event_start", "event_end")}),
         (_("Зависомость"), {"fields": ("supplier", "car_model")}),
     )
