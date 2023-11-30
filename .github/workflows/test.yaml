@@ -78,11 +78,3 @@ jobs:
           LANGUAGE_CODE: ru
           DEBUG: true
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      
-      - name: Upload code coverage to codeclimate
-        uses: paambaati/codeclimate-action@v3.2.0
-        env:
-          CC_TEST_REPORTER_ID: 9b1dadc89a947551e718cfcc06d848d385d920e7b9df591ea3e1aa6edf6b2352
-        with:
-          coverageLocations: |
-            ${{github.workspace}}/src/coverage.xml:coverage.py
