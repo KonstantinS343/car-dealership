@@ -1,4 +1,4 @@
-from rest_framework import viewsets, status, mixins
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
@@ -25,36 +25,47 @@ class PurchasesSalesHistoryСarShowViewSet(viewsets.GenericViewSet):
         else:
             return super().get_serializer_class()
 
-    @action(methods=["get"], detail=True, permission_classes=[IsAuthenticated, CarShopPurchasesSalesHistoryСarShowPermission])  # type: ignore
+    def get_queryset(self) -> Manager[PurchasesSalesHistoryСarShow]:
+        if getattr(self, "swagger_fake_view", False):
+            # queryset just for schema generation metadata
+            return PurchasesSalesHistoryСarShow.objects.none()
+        if self.action == 'carshop_history':
+            pk = self.kwargs['pk']
+            return PurchasesSalesHistoryСarShow.objects.filter(car_dealership_id=pk, is_active=True)
+        elif self.action == 'buyer_history':
+            pk = self.kwargs['pk']
+            return PurchasesSalesHistoryСarShow.objects.filter(buyer_id=pk, is_active=True)
+
+    @action(methods=["get"], detail=True, url_path='history', permission_classes=[IsAuthenticated, CarShopPurchasesSalesHistoryСarShowPermission])
     def carshop_history(self, request, pk=None) -> Response:
         """
         Функция возвращает историю продаж автосалона, если у автосалона еще нет продаж,
         то функция возвращает 404 страницу.
         """
-        carshow_history = PurchasesSalesHistoryСarShow.objects.filter(car_dealership_id=pk)
+        carshow_history = self.get_queryset()
 
-        serializer = PurchasesSalesHistoryСarShowSerializer(carshow_history, many=True)
+        serializer = self.get_serializer(carshow_history, many=True)
 
         if serializer.data:
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"detail": "У данного автосалона пустая история"}, status=status.HTTP_404_NOT_FOUND)
 
-    @action(methods=["get"], detail=True, url_path='buyer', permission_classes=[IsAuthenticated, BuyerPurchasesSalesHistoryСarShowPermission])  # type: ignore
+    @action(methods=["get"], detail=True, url_path='buyer/history', permission_classes=[IsAuthenticated, BuyerPurchasesSalesHistoryСarShowPermission])
     def buyer_history(self, request, pk=None) -> Response:
         """
         Функция возвращает историю покупок клиента, если у клиента еще нет покупок,
         то функция возвращает 404 страницу.
         """
-        carshow_history = PurchasesSalesHistoryСarShow.objects.filter(buyer_id=pk)
+        carshow_history = self.get_queryset()
 
-        serializer = PurchasesSalesHistoryСarShowSerializer(carshow_history, many=True)
+        serializer = self.get_serializer(carshow_history, many=True)
 
         if serializer.data:
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"detail": "У данного клинета пустая история"}, status=status.HTTP_404_NOT_FOUND)
 
 
-class PurchasesSalesHistorySupplierViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+class PurchasesSalesHistorySupplierViewSet(viewsets.GenericViewSet):
     """
     ViewSet для работы с историей продаж поставщика.
 
@@ -62,7 +73,24 @@ class PurchasesSalesHistorySupplierViewSet(mixins.ListModelMixin, viewsets.Gener
     """
 
     serializer_class = PurchasesSalesHistorySupplierSerializer
-    permission_classes = (IsAuthenticated, PurchasesSalesHistorySupplierPermission)
 
     def get_queryset(self) -> Manager[PurchasesSalesHistorySupplier]:
-        return PurchasesSalesHistorySupplier.objects.filter(is_active=True)
+        if getattr(self, "swagger_fake_view", False):
+            # queryset just for schema generation metadata
+            return PurchasesSalesHistorySupplier.objects.none()
+        pk = self.kwargs['pk']
+        return PurchasesSalesHistorySupplier.objects.filter(supplier_id=pk, is_active=True)
+
+    @action(methods=["get"], detail=True, url_path='history', permission_classes=[IsAuthenticated, PurchasesSalesHistorySupplierPermission])
+    def supplier_history(self, request, pk=None) -> Response:
+        """
+        Функция возвращает историю продаж поставщика, если у поставщика еще нет покупок,
+        то функция возвращает 404 страницу.
+        """
+        supplier_history = self.get_queryset()
+
+        serializer = self.get_serializer(supplier_history, many=True)
+
+        if serializer.data:
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"detail": "У данного поставщика пустая история"}, status=status.HTTP_404_NOT_FOUND)

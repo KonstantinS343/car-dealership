@@ -9,4 +9,4 @@ router_supplier = routers.DefaultRouter()
 router_carshow.register(r'', PurchasesSalesHistoryСarShowViewSet, basename='history_carshow')
 router_supplier.register(r'', PurchasesSalesHistorySupplierViewSet, basename='history_supplier')
 
-urlpatterns = [path('history/carshow/', include(router_carshow.urls)), path('history/supplier/', include(router_supplier.urls))]
+urlpatterns = [path('carshow/', include(router_carshow.urls)), path('supplier/', include(router_supplier.urls))]

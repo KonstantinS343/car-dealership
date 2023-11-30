@@ -6,7 +6,7 @@ from django.db.models import Manager
 from typing import List, Any
 
 from .permissions import ActionCarDealershipPermission, ActionSupplierPermission
-from .serializers import ActionCarDealershipSerializer, ActionSupplierSerializer
+from .serializers import ActionCarDealershipSerializer, ActionSupplierSerializer, ActionCarDealershipPostSerializer, ActionSupplierPostSerializer
 from apps.action.models import ActionCarDealership, ActionSupplier
 
 
@@ -17,7 +17,11 @@ class ActionCarDealershipViewSet(viewsets.ModelViewSet):
     Он предоставляет набор действий для создания, обновления, удаления и просмотра акций.
     """
 
-    serializer_class = ActionCarDealershipSerializer
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return ActionCarDealershipPostSerializer
+        else:
+            return ActionCarDealershipSerializer
 
     def get_permissions(self) -> List[Any]:
         self.permission_classes = (IsAuthenticated,)
@@ -37,7 +41,11 @@ class ActionSupplierViewSet(viewsets.ModelViewSet):
     Он предоставляет набор действий для создания, обновления, удаления и просмотра акций.
     """
 
-    serializer_class = ActionSupplierSerializer
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return ActionSupplierPostSerializer
+        else:
+            return ActionSupplierSerializer
 
     def get_permissions(self) -> List[Any]:
         self.permission_classes = (IsAuthenticated,)
