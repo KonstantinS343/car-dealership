@@ -50,6 +50,10 @@ jobs:
           pytest -v .
         env:
           DATABASE_URL: postgres://postgres:secret@localhost:5432/postgres
+          TIME_ZONE: Europe/Moscow
+          LANGUAGE_CODE: ru
+          DEBUG: true
+
       
       - name: Publish test results
         uses: dariocurr/pytest-summary@main
