@@ -53,6 +53,7 @@ jobs:
           TIME_ZONE: Europe/Moscow
           LANGUAGE_CODE: ru
           DEBUG: true
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
       
       - name: Publish test results
