@@ -15,7 +15,7 @@ class BuyerSerializer(serializers.ModelSerializer):
     В классе есть переопределенный метод create, который привязывает пользователя к созданному клиенту.
     """
 
-    user = UserSerializer()
+    user = UserSerializer(read_only=True, required=False)
 
     class Meta:
         model = Buyer
@@ -31,3 +31,15 @@ class BuyerSerializer(serializers.ModelSerializer):
         user = get_object_or_404(User, id=self.context["request"].user.id)
 
         return Buyer.objects.create(user=user, **validated_data)
+
+
+class BuyerUpdateSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для работы с покупателями.
+
+    Этот сериализатор предоставляет функциональность для обновление модели Buyer.
+    """
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name')

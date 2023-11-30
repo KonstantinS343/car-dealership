@@ -22,6 +22,9 @@ class CarShowViewSet(viewsets.ModelViewSet):
     serializer_class = CarShowSerializer
 
     def get_queryset(self) -> Manager[CarShow]:
+        if getattr(self, "swagger_fake_view", False):
+            # queryset just for schema generation metadata
+            return CarShow.objects.none()
         return CarShow.objects.filter(user=self.request.user, is_active=True)
 
     def create(self, request, *args, **kwargs):
@@ -31,7 +34,7 @@ class CarShowViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @action(methods=["get"], detail=True, url_path='cars')  # type: ignore
+    @action(methods=["get"], detail=True, url_path='cars')
     def car_shop_cars(self, request, pk=None) -> Response:
         """
         Функция возвращает список автомобилей автосалона, если у автосалона еще нет автомобилей,
@@ -45,7 +48,7 @@ class CarShowViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"detail": "У данного автосалона нет автомобилей"}, status=status.HTTP_404_NOT_FOUND)
 
-    @action(methods=["get"], detail=True, url_path='suppliers')  # type: ignore
+    @action(methods=["get"], detail=True, url_path='suppliers')
     def carshop_supplier_list(self, request, pk=None) -> Response:
         """
         Функция возвращает список поставщиков автосалона, если у автосалона еще нет поставщиков,
@@ -59,7 +62,7 @@ class CarShowViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"detail": "У данного автосалона нет поставщиков"}, status=status.HTTP_404_NOT_FOUND)
 
-    @action(methods=["get"], detail=True, url_path='unique')  # type: ignore
+    @action(methods=["get"], detail=True, url_path='unique')
     def carshop_unique_buyers(self, request, pk=None) -> Response:
         """
         Функция возвращает список уникальных клиентов автосалона, если у автосалона еще нет уникальных клиентов,
