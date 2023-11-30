@@ -49,7 +49,12 @@ jobs:
         run: |
           pytest -v .
         env:
-          DATABASE_URL: postgres://postgres:secret@localhost:5432/postgres
+          ENGINE: django.db.backends.postgresql
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: secret
+          HOST: localhost
+          PORT: 5432
           TIME_ZONE: Europe/Moscow
           LANGUAGE_CODE: ru
           DEBUG: true
