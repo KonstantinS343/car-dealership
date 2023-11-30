@@ -36,10 +36,14 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pipenv
+      
+      - name: Get requirements
+        run: |
+          pipenv requirements --dev > dev-requirements.txt
           
       - name: Install dependencies
         run: |
-          pipenv install --dev
+          pip install -r dev-requirements.txt
 
       - name: Run the tests
         run: |
@@ -47,15 +51,12 @@ jobs:
         env:
           DATABASE_URL: postgres://postgres:secret@localhost:5432/postgres
       
-      - name: publish test results
-        uses: phoenix-actions/test-reporting@v12
-        if: always()
+      - name: Publish test results
+        uses: dariocurr/pytest-summary@main
         with:
-          name: Test results
-          path: "junit-*.xml"
-          reporter: java-junit
+          output: test-summary.md
       
-      - name: upload code coverage to codeclimate
+      - name: Upload code coverage to codeclimate
         uses: paambaati/codeclimate-action@v3.2.0
         env:
           CC_TEST_REPORTER_ID: 9b1dadc89a947551e718cfcc06d848d385d920e7b9df591ea3e1aa6edf6b2352
