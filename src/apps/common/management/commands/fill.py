@@ -7,7 +7,7 @@ from apps.buyer.models import Buyer
 from apps.car_model.models import Car
 from apps.car_show.models import CarShow, CarShowModel, CarDealershipSuppliersList, UniqueBuyersCarDealership
 from apps.common.models import User
-from apps.purchase_history.models import PurchasesSalesHistorySupplier, PurchasesSalesHistoryСarShow
+from apps.purchase_history.model.models import PurchasesSalesHistorySupplier, PurchasesSalesHistoryСarShow
 from apps.supplier.models import Supplier, SupplierCarModel, UniqueBuyersSuppliers
 
 
