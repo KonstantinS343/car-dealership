@@ -4,7 +4,7 @@ from ddf import G
 
 from typing import Dict
 
-from apps.car_show.models import CarShow
+from apps.car_show.model.models import CarShow
 
 
 @pytest.fixture(scope='function')

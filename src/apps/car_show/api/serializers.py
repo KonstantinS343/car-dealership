@@ -1,9 +1,6 @@
 from rest_framework import serializers
 
-from django.shortcuts import get_object_or_404
-
-from apps.car_show.models import CarShow, CarShowModel, UniqueBuyersCarDealership, CarDealershipSuppliersList
-from apps.common.models import User
+from apps.car_show.model.models import CarShow, CarShowModel, UniqueBuyersCarDealership, CarDealershipSuppliersList
 from apps.car_model.api.serilizers import CarSerializer
 from apps.buyer.api.serializers import BuyerSerializer
 
@@ -31,11 +28,6 @@ class CarShowSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             "balance": {"read_only": True},
         }
-
-    def create(self, validated_data):
-        user = get_object_or_404(User, id=self.context["request"].user.id)
-
-        return CarShow.objects.create(user=user, **validated_data)
 
 
 class CarShowModelSerializer(serializers.ModelSerializer):
