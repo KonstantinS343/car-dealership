@@ -6,7 +6,7 @@ from apps.common.models import User
 
 class CarShowManager(models.Manager):
     """
-    Manager для модели CarShow, который переопределяет логику создания объекта Supplier.
+    Manager для модели CarShow, который переопределяет логику создания объекта CarShow.
     """
 
     def create(self, user_id, **kwargs: Any) -> Any:
