@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 
 from django.utils import timezone
 
-from apps.action.models import ActionCarDealership, ActionSupplier
+from apps.action.model.models import ActionCarDealership, ActionSupplier
 from apps.buyer.models import Buyer
 from apps.car_model.models import Car
 from apps.car_show.models import CarShow, CarShowModel, CarDealershipSuppliersList, UniqueBuyersCarDealership

@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 from apps.common.models import TimeStampedUUIDModel
+from apps.action.model.queryset import ActionQuerySet
 
 
 class Action(TimeStampedUUIDModel):
@@ -11,6 +12,8 @@ class Action(TimeStampedUUIDModel):
     event_start = models.DateField(verbose_name=_("Дата начала"))
     event_end = models.DateField(verbose_name=_("Дата окончания"))
     discount = models.DecimalField(verbose_name=_("Скидка"), validators=[MinValueValidator(0.0), MaxValueValidator(1.0)], max_digits=3, decimal_places=2)
+
+    objects = models.Manager.from_queryset(ActionQuerySet)()
 
     class Meta:
         abstract = True
