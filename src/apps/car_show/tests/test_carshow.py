@@ -8,7 +8,7 @@ from django.forms.models import model_to_dict
 import json
 
 from apps.supplier.models import Supplier
-from apps.car_model.models import Car
+from apps.car_model.model.models import Car
 from apps.car_show.models import CarShow, CarShowModel, UniqueBuyersCarDealership, CarDealershipSuppliersList
 from apps.buyer.models import Buyer
 
