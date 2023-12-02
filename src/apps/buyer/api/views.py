@@ -7,7 +7,7 @@ from django.db.models import Manager
 
 from .serializers import BuyerSerializer, BuyerUpdateSerializer
 from .permissions import BuyerPermission
-from apps.buyer.models import Buyer
+from apps.buyer.model.models import Buyer
 
 
 class BuyerViewSet(viewsets.ModelViewSet):
@@ -30,13 +30,13 @@ class BuyerViewSet(viewsets.ModelViewSet):
         if getattr(self, "swagger_fake_view", False):
             # queryset just for schema generation metadata
             return Buyer.objects.none()
-        return Buyer.objects.filter(user=self.request.user, is_active=True)
+        return Buyer.objects.for_buyer(user=self.request.user)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         try:
-            serializer.save()
+            serializer.save(user_id=self.request.user.id)
         except IntegrityError:
             return Response({"detail": "Вы один покупатель!"}, status=status.HTTP_400_BAD_REQUEST)
         else:

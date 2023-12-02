@@ -3,7 +3,7 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from apps.action.models import ActionCarDealership, ActionSupplier
-from apps.buyer.models import Buyer
+from apps.buyer.model.models import Buyer
 from apps.car_model.models import Car
 from apps.car_show.models import CarShow, CarShowModel, CarDealershipSuppliersList, UniqueBuyersCarDealership
 from apps.common.models import User
