@@ -50,7 +50,7 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 
-THIRD_PARTY_APPS = ['rest_framework', 'debug_toolbar', 'drf_yasg', 'corsheaders', 'django_countries', 'rest_framework_simplejwt']
+THIRD_PARTY_APPS = ['rest_framework', 'debug_toolbar', 'drf_yasg', 'corsheaders', 'django_countries', 'rest_framework_simplejwt', 'django_filters']
 
 LOCAL_APPS = ['apps.car_show', 'apps.car_model', 'apps.buyer', 'apps.common', 'apps.supplier', 'apps.purchase_history', 'apps.action']
 
@@ -122,7 +122,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-REST_FRAMEWORK = {'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',)}
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',),
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+}
 
 AUTH_USER_MODEL = 'common.User'
 
