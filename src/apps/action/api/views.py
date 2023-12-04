@@ -10,7 +10,7 @@ from typing import List, Any
 from .permissions import ActionCarDealershipPermission, ActionSupplierPermission
 from .serializers import ActionCarDealershipSerializer, ActionSupplierSerializer, ActionCarDealershipPostSerializer, ActionSupplierPostSerializer
 from apps.action.model.models import ActionCarDealership, ActionSupplier
-from apps.action.filters import ActionCarDealershipFilter
+from apps.action.filters import ActionCarDealershipFilter, ActionSupplierFilter
 
 
 class ActionCarDealershipViewSet(viewsets.ModelViewSet):
@@ -46,6 +46,9 @@ class ActionSupplierViewSet(viewsets.ModelViewSet):
 
     Он предоставляет набор действий для создания, обновления, удаления и просмотра акций.
     """
+
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = ActionSupplierFilter
 
     def get_serializer_class(self):
         if self.action == 'create':
