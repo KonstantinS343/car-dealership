@@ -30,7 +30,7 @@ class BuyerViewSet(viewsets.ModelViewSet):
         if getattr(self, "swagger_fake_view", False):
             # queryset just for schema generation metadata
             return Buyer.objects.none()
-        return Buyer.objects.for_buyer(user=self.request.user)
+        return Buyer.objects.get_buyer_by_user_id(user_id=self.request.user.id)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
