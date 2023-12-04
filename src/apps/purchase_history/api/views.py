@@ -7,7 +7,7 @@ from django.db.models import Manager
 
 from .permissions import CarShopPurchasesSalesHistoryСarShowPermission, PurchasesSalesHistorySupplierPermission, BuyerPurchasesSalesHistoryСarShowPermission
 from .serializers import PurchasesSalesHistorySupplierSerializer, PurchasesSalesHistoryСarShowSerializer
-from apps.purchase_history.models import PurchasesSalesHistorySupplier, PurchasesSalesHistoryСarShow
+from apps.purchase_history.model.models import PurchasesSalesHistorySupplier, PurchasesSalesHistoryСarShow
 
 
 class PurchasesSalesHistoryСarShowViewSet(viewsets.GenericViewSet):
@@ -29,12 +29,11 @@ class PurchasesSalesHistoryСarShowViewSet(viewsets.GenericViewSet):
         if getattr(self, "swagger_fake_view", False):
             # queryset just for schema generation metadata
             return PurchasesSalesHistoryСarShow.objects.none()
+        pk = self.kwargs['pk']
         if self.action == 'carshop_history':
-            pk = self.kwargs['pk']
-            return PurchasesSalesHistoryСarShow.objects.filter(car_dealership_id=pk, is_active=True)
+            return PurchasesSalesHistoryСarShow.objects.car_show_history(id=pk)
         elif self.action == 'buyer_history':
-            pk = self.kwargs['pk']
-            return PurchasesSalesHistoryСarShow.objects.filter(buyer_id=pk, is_active=True)
+            return PurchasesSalesHistoryСarShow.objects.buyer_history(id=pk)
 
     @action(methods=["get"], detail=True, url_path='history', permission_classes=[IsAuthenticated, CarShopPurchasesSalesHistoryСarShowPermission])
     def carshop_history(self, request, pk=None) -> Response:
@@ -79,7 +78,7 @@ class PurchasesSalesHistorySupplierViewSet(viewsets.GenericViewSet):
             # queryset just for schema generation metadata
             return PurchasesSalesHistorySupplier.objects.none()
         pk = self.kwargs['pk']
-        return PurchasesSalesHistorySupplier.objects.filter(supplier_id=pk, is_active=True)
+        return PurchasesSalesHistorySupplier.objects.supplier_history(id=pk)
 
     @action(methods=["get"], detail=True, url_path='history', permission_classes=[IsAuthenticated, PurchasesSalesHistorySupplierPermission])
     def supplier_history(self, request, pk=None) -> Response:
