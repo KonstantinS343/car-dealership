@@ -3,12 +3,12 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from apps.action.model.models import ActionCarDealership, ActionSupplier
-from apps.buyer.models import Buyer
-from apps.car_model.models import Car
-from apps.car_show.models import CarShow, CarShowModel, CarDealershipSuppliersList, UniqueBuyersCarDealership
+from apps.buyer.model.models import Buyer
+from apps.car_model.model.models import Car
+from apps.car_show.model.models import CarShow, CarShowModel, CarDealershipSuppliersList, UniqueBuyersCarDealership
 from apps.common.models import User
-from apps.purchase_history.models import PurchasesSalesHistorySupplier, PurchasesSalesHistoryСarShow
-from apps.supplier.models import Supplier, SupplierCarModel, UniqueBuyersSuppliers
+from apps.purchase_history.model.models import PurchasesSalesHistorySupplier, PurchasesSalesHistoryСarShow
+from apps.supplier.model.models import Supplier, SupplierCarModel, UniqueBuyersSuppliers
 
 
 class Command(BaseCommand):
@@ -18,7 +18,7 @@ class Command(BaseCommand):
         buyer_user = User.objects.create(username='client', password='password', user_type=1, email_confirmed=True)
         carshow_user = User.objects.create(username='carshow_owner', password='password', user_type=2, email_confirmed=True)
         supplier_user = User.objects.create(username='supplier', password='password', user_type=3, email_confirmed=True)
-        supplier = Supplier.objects.create(user=supplier_user, name='Supplier Name', country='RU', year_foundation=1990, buyer_amount=100)
+        supplier = Supplier.objects.create(user_id=supplier_user.id, name='Supplier Name', country='RU', year_foundation=1990, buyer_amount=100)
         carshow = CarShow.objects.create(
             user=carshow_user,
             name='Car Show Name',

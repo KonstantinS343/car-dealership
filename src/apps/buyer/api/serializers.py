@@ -1,8 +1,6 @@
 from rest_framework import serializers
 
-from django.shortcuts import get_object_or_404
-
-from apps.buyer.models import Buyer
+from apps.buyer.model.models import Buyer
 from apps.common.models import User
 from apps.common.serializers import UserSerializer
 
@@ -26,11 +24,6 @@ class BuyerSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             "balance": {"read_only": True},
         }
-
-    def create(self, validated_data):
-        user = get_object_or_404(User, id=self.context["request"].user.id)
-
-        return Buyer.objects.create(user=user, **validated_data)
 
 
 class BuyerUpdateSerializer(serializers.ModelSerializer):

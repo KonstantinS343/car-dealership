@@ -2,7 +2,7 @@ import pytest
 
 from ddf import G
 
-from apps.purchase_history.models import PurchasesSalesHistoryСarShow, PurchasesSalesHistorySupplier
+from apps.purchase_history.model.models import PurchasesSalesHistoryСarShow, PurchasesSalesHistorySupplier
 
 
 @pytest.fixture(scope='function')

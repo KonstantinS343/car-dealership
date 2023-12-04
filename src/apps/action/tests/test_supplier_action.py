@@ -7,7 +7,7 @@ from django.forms.models import model_to_dict
 
 import json
 
-from apps.supplier.models import Supplier
+from apps.supplier.model.models import Supplier
 from apps.action.model.models import ActionSupplier
 from apps.common.conftest import api_client, user  # noqa
 
