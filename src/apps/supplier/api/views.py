@@ -26,7 +26,7 @@ class SupplierViewSet(viewsets.ModelViewSet):
         if getattr(self, "swagger_fake_view", False):
             # queryset just for schema generation metadata
             return Supplier.objects.none()
-        return Supplier.objects.for_supplier(user=self.request.user.id)
+        return Supplier.objects.get_supplier_by_user_id(user=self.request.user.id)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -44,7 +44,7 @@ class SupplierViewSet(viewsets.ModelViewSet):
         Функция возвращает список автомобилей поставщика, если у поставщика еще нет автомобилей,
         то функция возвращает 404 страницу.
         """
-        cars = SupplierCarModel.objects.for_supplier(supplier=pk)
+        cars = SupplierCarModel.objects.get_supplier_by_id(supplier=pk)
 
         serializer = SupplierCarModelSerializer(cars, many=True)
 
@@ -58,7 +58,7 @@ class SupplierViewSet(viewsets.ModelViewSet):
         Функция возвращает список уникальных клиентов поставщика, если у автосалона еще нет уникальных поставщика,
         то функция возвращает 404 страницу.
         """
-        clients = UniqueBuyersSuppliers.objects.for_supplier(supplier=pk)
+        clients = UniqueBuyersSuppliers.objects.get_supplier_by_id(supplier=pk)
 
         serializer = UniqueBuyersSuppliersSerializer(clients, many=True)
 
