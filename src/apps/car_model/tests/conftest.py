@@ -2,7 +2,7 @@ import pytest
 
 from ddf import G
 
-from apps.car_model.models import Car
+from apps.car_model.model.models import Car
 
 
 @pytest.fixture(scope='function')

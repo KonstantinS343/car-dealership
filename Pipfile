@@ -13,6 +13,7 @@ django-debug-toolbar = "*"
 django-environ = "*"
 django-countries = "*"
 djangorestframework-simplejwt = "*"
+django-filter = "*"
 
 psycopg2-binary = "*"
 

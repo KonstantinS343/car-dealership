@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 from apps.common.models import TimeStampedUUIDModel
+from apps.car_model.model.queryset import CarQuerySet
 
 
 class Car(TimeStampedUUIDModel):
@@ -34,6 +35,8 @@ class Car(TimeStampedUUIDModel):
     fuel_type = models.CharField(choices=FUEL_TYPE, verbose_name=_("Тип топлива"))
     gearbox_type = models.CharField(choices=GEARBOX_TYPE, verbose_name=_("Тип коробки передач"))
     car_body = models.CharField(choices=CAR_BODY_TYPE, verbose_name=_("Тип кузова"))
+
+    objects = models.Manager.from_queryset(CarQuerySet)()
 
     def __str__(self) -> str:
         return self.brand

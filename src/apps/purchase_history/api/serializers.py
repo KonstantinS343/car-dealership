@@ -4,7 +4,7 @@ from apps.car_show.api.serializers import CarShowSerializer
 from apps.car_model.api.serilizers import CarSerializer
 from apps.supplier.api.serializers import SupplierSerializer
 from apps.buyer.api.serializers import BuyerSerializer
-from apps.purchase_history.models import PurchasesSalesHistoryСarShow, PurchasesSalesHistorySupplier
+from apps.purchase_history.model.models import PurchasesSalesHistoryСarShow, PurchasesSalesHistorySupplier
 
 
 class PurchasesSalesHistoryСarShowSerializer(serializers.ModelSerializer):
