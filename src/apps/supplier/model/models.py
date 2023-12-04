@@ -7,6 +7,8 @@ import datetime
 from typing import List, Tuple
 
 from apps.common.models import TimeStampedUUIDModel, User
+from apps.supplier.model.queryset import SupplierQuerySet
+from apps.supplier.model.manager import SupplierManager
 
 
 class Supplier(TimeStampedUUIDModel):
@@ -19,6 +21,8 @@ class Supplier(TimeStampedUUIDModel):
     country = CountryField(verbose_name=_("Локация"))
     year_foundation = models.IntegerField(_("Год основания"), choices=year_choices())
     buyer_amount = models.IntegerField(verbose_name=_("Количество покупателей"), validators=[MinValueValidator(0)], default=0)
+
+    objects = SupplierManager.from_queryset(SupplierQuerySet)()
 
     def __str__(self) -> str:
         return self.name
@@ -34,6 +38,8 @@ class SupplierCarModel(TimeStampedUUIDModel):
     car_model = models.ForeignKey('car_model.Car', on_delete=models.CASCADE, related_name='car_model_supplier_car_model', verbose_name=_("Модель автомобиля"))
     price = models.DecimalField(verbose_name=_("Цена"), validators=[MinValueValidator(0.0)], max_digits=10, decimal_places=2)
 
+    objects = models.Manager.from_queryset(SupplierQuerySet)()
+
     class Meta:
         db_table = 'supplier_cars'
         verbose_name = _("Автомобиль поставщика")
@@ -45,6 +51,8 @@ class UniqueBuyersSuppliers(TimeStampedUUIDModel):
         'car_show.CarShow', on_delete=models.CASCADE, related_name='unique_buyers_supplier_car_show', verbose_name=_("Автосалон")
     )
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, related_name='unique_buyers_supplier', verbose_name=_("Поставщик"))
+
+    objects = models.Manager.from_queryset(SupplierQuerySet)()
 
     class Meta:
         db_table = 'unique_buyers_suppliers'

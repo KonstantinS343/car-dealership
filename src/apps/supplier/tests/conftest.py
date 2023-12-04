@@ -4,7 +4,7 @@ from ddf import G
 
 from typing import Dict
 
-from apps.supplier.models import Supplier
+from apps.supplier.model.models import Supplier
 
 
 @pytest.fixture(scope='function')
