@@ -6,6 +6,6 @@ from apps.car_model.model.models import Car
 
 
 @pytest.fixture(scope='function')
-def car() -> Car:
-    car = G(Car)
+def car(db, weight) -> Car:
+    car = G(Car, weight=weight)
     return car
