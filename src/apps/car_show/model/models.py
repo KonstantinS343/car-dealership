@@ -4,6 +4,8 @@ from django_countries.fields import CountryField
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 from apps.common.models import TimeStampedUUIDModel, User
+from apps.car_show.model.queryset import CarShowQuerySet
+from apps.car_show.model.manager import CarShowManager
 
 
 class CarShow(TimeStampedUUIDModel):
@@ -39,6 +41,8 @@ class CarShow(TimeStampedUUIDModel):
     gearbox_type = models.CharField(choices=GEARBOX_TYPE, verbose_name=_("Тип коробки передач"))
     car_body = models.CharField(choices=CAR_BODY_TYPE, verbose_name=_("Тип кузова"))
 
+    objects = CarShowManager.from_queryset(CarShowQuerySet)()
+
     def __str__(self) -> str:
         return self.name
 
@@ -53,6 +57,8 @@ class CarShowModel(TimeStampedUUIDModel):
     car_model = models.ForeignKey('car_model.Car', on_delete=models.CASCADE, related_name='car_show_model_car', verbose_name=_("Модель автомобиля"))
     model_amount = models.IntegerField(verbose_name=_("Количество автомобилей"), validators=[MinValueValidator(0)])
 
+    objects = models.Manager.from_queryset(CarShowQuerySet)()
+
     class Meta:
         db_table = 'cars_show_car_models'
         verbose_name = _("Модель автосалона")
@@ -63,6 +69,8 @@ class UniqueBuyersCarDealership(TimeStampedUUIDModel):
     car_dealership = models.ForeignKey(CarShow, on_delete=models.CASCADE, related_name='unique_buyers_car_show', verbose_name=_("Автосалон"))
     buyer = models.ForeignKey('buyer.Buyer', on_delete=models.CASCADE, related_name='unique_buyers_car_show_buyer', verbose_name=_("Покупатель"))
 
+    objects = models.Manager.from_queryset(CarShowQuerySet)()
+
     class Meta:
         db_table = 'unique_buyers_car_dealerships'
         verbose_name = _("Уникальный клиент автосалона")
@@ -72,6 +80,8 @@ class UniqueBuyersCarDealership(TimeStampedUUIDModel):
 class CarDealershipSuppliersList(TimeStampedUUIDModel):
     car_dealership = models.ForeignKey(CarShow, on_delete=models.CASCADE, related_name='suppliers_list_car_show', verbose_name=_("Автосалон"))
     supplier = models.ForeignKey('supplier.Supplier', on_delete=models.CASCADE, related_name='suppliers_list_supplier', verbose_name=_("Поставщик"))
+
+    objects = models.Manager.from_queryset(CarShowQuerySet)()
 
     class Meta:
         db_table = 'car_dealerships_suppliers_list'

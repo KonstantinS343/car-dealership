@@ -9,7 +9,7 @@ import json
 
 from apps.supplier.model.models import Supplier, SupplierCarModel, UniqueBuyersSuppliers
 from apps.car_model.models import Car
-from apps.car_show.models import CarShow
+from apps.car_show.model.models import CarShow
 from apps.common.conftest import api_client, user  # noqa
 
 
