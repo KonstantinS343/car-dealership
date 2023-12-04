@@ -10,7 +10,7 @@ from django_filters import rest_framework as filters
 from .permissions import CarShopPurchasesSalesHistoryСarShowPermission, PurchasesSalesHistorySupplierPermission, BuyerPurchasesSalesHistoryСarShowPermission
 from .serializers import PurchasesSalesHistorySupplierSerializer, PurchasesSalesHistoryСarShowSerializer
 from apps.purchase_history.model.models import PurchasesSalesHistorySupplier, PurchasesSalesHistoryСarShow
-from apps.purchase_history.filters import PurchasesSalesHistoryСarShowFilter
+from apps.purchase_history.filters import PurchasesSalesHistoryСarShowFilter, PurchasesSalesHistorySupplierFilter
 
 
 class PurchasesSalesHistoryСarShowViewSet(viewsets.GenericViewSet):
@@ -79,7 +79,7 @@ class PurchasesSalesHistorySupplierViewSet(viewsets.GenericViewSet):
 
     serializer_class = PurchasesSalesHistorySupplierSerializer
     filter_backends = (filters.DjangoFilterBackend,)
-    filterset_class = PurchasesSalesHistoryСarShowFilter
+    filterset_class = PurchasesSalesHistorySupplierFilter
 
     def get_queryset(self) -> Manager[PurchasesSalesHistorySupplier]:
         if getattr(self, "swagger_fake_view", False):
