@@ -8,7 +8,7 @@ from django.forms.models import model_to_dict
 import json
 
 from apps.car_show.model.models import CarShow
-from apps.action.models import ActionCarDealership
+from apps.action.model.models import ActionCarDealership
 from apps.common.conftest import api_client, user  # noqa
 
 

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from apps.action.models import ActionCarDealership, ActionSupplier
+from apps.action.model.models import ActionCarDealership, ActionSupplier
 from apps.car_show.model.models import CarShow
 from apps.supplier.model.models import Supplier
 from apps.car_model.model.models import Car
