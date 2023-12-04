@@ -7,7 +7,7 @@ from django.db.models import Manager
 
 from .serializers import CarShowSerializer, CarShowModelSerializer, UniqueBuyersCarDealershipSerializer, CarDealershipSuppliersListSerializer
 from .permissions import CarShowPermission
-from apps.car_show.models import CarShow, CarShowModel, UniqueBuyersCarDealership, CarDealershipSuppliersList
+from apps.car_show.model.models import CarShow, CarShowModel, UniqueBuyersCarDealership, CarDealershipSuppliersList
 
 
 class CarShowViewSet(viewsets.ModelViewSet):
@@ -25,12 +25,12 @@ class CarShowViewSet(viewsets.ModelViewSet):
         if getattr(self, "swagger_fake_view", False):
             # queryset just for schema generation metadata
             return CarShow.objects.none()
-        return CarShow.objects.filter(user=self.request.user, is_active=True)
+        return CarShow.objects.get_carshow_by_user_id(user=self.request.user)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        serializer.save(user_id=self.request.user.id)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -40,7 +40,7 @@ class CarShowViewSet(viewsets.ModelViewSet):
         Функция возвращает список автомобилей автосалона, если у автосалона еще нет автомобилей,
         то функция возвращает 404 страницу.
         """
-        cars = CarShowModel.objects.filter(car_dealership_id=pk)
+        cars = CarShowModel.objects.get_carshow_by_id(id=pk)
 
         serializer = CarShowModelSerializer(cars, many=True)
 
@@ -54,7 +54,7 @@ class CarShowViewSet(viewsets.ModelViewSet):
         Функция возвращает список поставщиков автосалона, если у автосалона еще нет поставщиков,
         то функция возвращает 404 страницу.
         """
-        suppliers = CarDealershipSuppliersList.objects.filter(car_dealership_id=pk)
+        suppliers = CarDealershipSuppliersList.objects.get_carshow_by_id(id=pk)
 
         serializer = CarDealershipSuppliersListSerializer(suppliers, many=True)
 
@@ -68,7 +68,7 @@ class CarShowViewSet(viewsets.ModelViewSet):
         Функция возвращает список уникальных клиентов автосалона, если у автосалона еще нет уникальных клиентов,
         то функция возвращает 404 страницу.
         """
-        clients = UniqueBuyersCarDealership.objects.filter(car_dealership_id=pk)
+        clients = UniqueBuyersCarDealership.objects.get_carshow_by_id(id=pk)
 
         serializer = UniqueBuyersCarDealershipSerializer(clients, many=True)
 

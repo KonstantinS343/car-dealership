@@ -5,8 +5,8 @@ from ddf import G
 from typing import Dict
 
 from apps.action.models import ActionCarDealership, ActionSupplier
-from apps.car_show.models import CarShow
-from apps.supplier.models import Supplier
+from apps.car_show.model.models import CarShow
+from apps.supplier.model.models import Supplier
 
 
 @pytest.fixture(scope='function')
