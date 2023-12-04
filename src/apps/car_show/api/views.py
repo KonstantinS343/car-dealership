@@ -25,7 +25,7 @@ class CarShowViewSet(viewsets.ModelViewSet):
         if getattr(self, "swagger_fake_view", False):
             # queryset just for schema generation metadata
             return CarShow.objects.none()
-        return CarShow.objects.for_carshow(user=self.request.user)
+        return CarShow.objects.get_carshow_by_user_id(user=self.request.user)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -40,7 +40,7 @@ class CarShowViewSet(viewsets.ModelViewSet):
         Функция возвращает список автомобилей автосалона, если у автосалона еще нет автомобилей,
         то функция возвращает 404 страницу.
         """
-        cars = CarShowModel.objects.for_carshow_id(id=pk)
+        cars = CarShowModel.objects.get_carshow_by_id(id=pk)
 
         serializer = CarShowModelSerializer(cars, many=True)
 
@@ -54,7 +54,7 @@ class CarShowViewSet(viewsets.ModelViewSet):
         Функция возвращает список поставщиков автосалона, если у автосалона еще нет поставщиков,
         то функция возвращает 404 страницу.
         """
-        suppliers = CarDealershipSuppliersList.objects.for_carshow_id(id=pk)
+        suppliers = CarDealershipSuppliersList.objects.get_carshow_by_id(id=pk)
 
         serializer = CarDealershipSuppliersListSerializer(suppliers, many=True)
 
@@ -68,7 +68,7 @@ class CarShowViewSet(viewsets.ModelViewSet):
         Функция возвращает список уникальных клиентов автосалона, если у автосалона еще нет уникальных клиентов,
         то функция возвращает 404 страницу.
         """
-        clients = UniqueBuyersCarDealership.objects.for_carshow_id(id=pk)
+        clients = UniqueBuyersCarDealership.objects.get_carshow_by_id(id=pk)
 
         serializer = UniqueBuyersCarDealershipSerializer(clients, many=True)
 
