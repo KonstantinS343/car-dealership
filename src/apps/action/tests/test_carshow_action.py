@@ -17,22 +17,22 @@ class TestActionCarShow:
     endpoint = "/api/v1/actions/carshow/"
     AMOUNT_ACTION_ATTRIBUTES = 7
 
-    @pytest.mark.parametrize('user_type', [1, 2, 3])
+    @pytest.mark.parametrize('user_type, model', [(1, 'ford'), (2, 'ford'), (3, 'ford')])
     def test_list(self, user_type, api_client, carshow_action) -> None:
         response = api_client.get(self.endpoint)
 
         assert response.status_code == status.HTTP_200_OK
         assert len(json.loads(response.content)) == 1
 
-    @pytest.mark.parametrize('user_type', [1, 2, 3])
+    @pytest.mark.parametrize('user_type, model', [(1, 'ford'), (2, 'ford'), (3, 'ford')])
     def test_retrive(self, user_type, api_client, carshow_action) -> None:
         response = api_client.get(f'{self.endpoint}{carshow_action.id}/')
 
         assert response.status_code == status.HTTP_200_OK
         assert len(json.loads(response.content)) == TestActionCarShow.AMOUNT_ACTION_ATTRIBUTES
 
-    @pytest.mark.parametrize('user_type', [1, 2, 3])
-    def test_create(self, user_type, api_client) -> None:
+    @pytest.mark.parametrize('user_type, model', [(1, 'ford'), (2, 'ford'), (3, 'ford')])
+    def test_create(self, user_type, api_client, model) -> None:
         carshow = G(CarShow)
         action = N(ActionCarDealership, car_dealership=carshow, discount=0.4)
 
@@ -42,7 +42,7 @@ class TestActionCarShow:
         else:
             assert response.status_code == status.HTTP_403_FORBIDDEN
 
-    @pytest.mark.parametrize('user_type', [1, 2, 3])
+    @pytest.mark.parametrize('user_type, model', [(1, 'ford'), (2, 'ford'), (3, 'ford')])
     def test_delete(self, user_type, api_client, carshow_action) -> None:
         response = api_client.delete(f"{self.endpoint}{carshow_action.id}/")
 
@@ -51,7 +51,7 @@ class TestActionCarShow:
         else:
             assert response.status_code == status.HTTP_403_FORBIDDEN
 
-    @pytest.mark.parametrize('user_type', [1, 2, 3])
+    @pytest.mark.parametrize('user_type, model', [(1, 'ford'), (2, 'ford'), (3, 'ford')])
     def test_update(self, user_type, api_client, carshow_action, action_update_data) -> None:
         response = api_client.put(f"{self.endpoint}{carshow_action.id}/", action_update_data, format="json")
 
@@ -60,7 +60,7 @@ class TestActionCarShow:
         else:
             assert response.status_code == status.HTTP_403_FORBIDDEN
 
-    @pytest.mark.parametrize('user_type', [1, 2, 3])
+    @pytest.mark.parametrize('user_type, model', [(1, 'ford'), (2, 'ford'), (3, 'ford')])
     def test_partial_update(self, user_type, api_client, carshow_action, action_partial_update_data) -> None:
         response = api_client.patch(f"{self.endpoint}{carshow_action.id}/", action_partial_update_data, format="json")
 
@@ -68,3 +68,10 @@ class TestActionCarShow:
             assert response.status_code == status.HTTP_200_OK
         else:
             assert response.status_code == status.HTTP_403_FORBIDDEN
+
+    @pytest.mark.parametrize('user_type, model', [(1, 'ford'), (2, 'ford'), (3, 'ford')])
+    def test_filter_queryset(self, user_type, api_client, carshow_action, model) -> None:
+        response = api_client.get(self.endpoint + f'?{model}/')
+
+        assert response.status_code == status.HTTP_200_OK
+        assert len(json.loads(response.content)) == 1
