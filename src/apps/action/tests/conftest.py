@@ -7,17 +7,18 @@ from typing import Dict
 from apps.action.model.models import ActionCarDealership, ActionSupplier
 from apps.car_show.model.models import CarShow
 from apps.supplier.model.models import Supplier
+from apps.car_model.model.models import Car
 
 
 @pytest.fixture(scope='function')
-def carshow_action(user) -> ActionCarDealership:
-    carshow_action = G(ActionCarDealership, car_dealership=G(CarShow, user=user))
+def carshow_action(user, model) -> ActionCarDealership:
+    carshow_action = G(ActionCarDealership, car_dealership=G(CarShow, user=user), car_model=G(Car, brand=model))
     return carshow_action
 
 
 @pytest.fixture(scope='function')
-def supplier_action(user) -> ActionSupplier:
-    supplier_action = G(ActionSupplier, supplier=G(Supplier, user=user))
+def supplier_action(user, model) -> ActionSupplier:
+    supplier_action = G(ActionSupplier, supplier=G(Supplier, user=user), car_model=G(Car, brand=model))
     return supplier_action
 
 

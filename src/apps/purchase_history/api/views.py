@@ -4,10 +4,13 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 
 from django.db.models import Manager
+from django_filters import rest_framework as filters
+
 
 from .permissions import CarShopPurchasesSalesHistoryСarShowPermission, PurchasesSalesHistorySupplierPermission, BuyerPurchasesSalesHistoryСarShowPermission
 from .serializers import PurchasesSalesHistorySupplierSerializer, PurchasesSalesHistoryСarShowSerializer
 from apps.purchase_history.model.models import PurchasesSalesHistorySupplier, PurchasesSalesHistoryСarShow
+from apps.purchase_history.filters import PurchasesSalesHistoryСarShowFilter, PurchasesSalesHistorySupplierFilter
 
 
 class PurchasesSalesHistoryСarShowViewSet(viewsets.GenericViewSet):
@@ -16,6 +19,9 @@ class PurchasesSalesHistoryСarShowViewSet(viewsets.GenericViewSet):
 
     Он позволяет только просматривать историю.
     """
+
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = PurchasesSalesHistoryСarShowFilter
 
     def get_serializer_class(self):
         if self.action == 'carshop_history':
@@ -41,7 +47,7 @@ class PurchasesSalesHistoryСarShowViewSet(viewsets.GenericViewSet):
         Функция возвращает историю продаж автосалона, если у автосалона еще нет продаж,
         то функция возвращает 404 страницу.
         """
-        carshow_history = self.get_queryset()
+        carshow_history = self.filter_queryset(self.get_queryset())
 
         serializer = self.get_serializer(carshow_history, many=True)
 
@@ -55,7 +61,7 @@ class PurchasesSalesHistoryСarShowViewSet(viewsets.GenericViewSet):
         Функция возвращает историю покупок клиента, если у клиента еще нет покупок,
         то функция возвращает 404 страницу.
         """
-        carshow_history = self.get_queryset()
+        carshow_history = self.filter_queryset(self.get_queryset())
 
         serializer = self.get_serializer(carshow_history, many=True)
 
@@ -72,6 +78,8 @@ class PurchasesSalesHistorySupplierViewSet(viewsets.GenericViewSet):
     """
 
     serializer_class = PurchasesSalesHistorySupplierSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = PurchasesSalesHistorySupplierFilter
 
     def get_queryset(self) -> Manager[PurchasesSalesHistorySupplier]:
         if getattr(self, "swagger_fake_view", False):
@@ -86,7 +94,7 @@ class PurchasesSalesHistorySupplierViewSet(viewsets.GenericViewSet):
         Функция возвращает историю продаж поставщика, если у поставщика еще нет покупок,
         то функция возвращает 404 страницу.
         """
-        supplier_history = self.get_queryset()
+        supplier_history = self.filter_queryset(self.get_queryset())
 
         serializer = self.get_serializer(supplier_history, many=True)
 
