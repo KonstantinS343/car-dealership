@@ -3,7 +3,7 @@ from rest_framework import serializers
 from apps.common.models import User
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UsersSerializer(serializers.ModelSerializer):
     """
     Сериализатор для работы с пользователями.
 

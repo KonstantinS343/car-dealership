@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from apps.buyer.model.models import Buyer
 from apps.common.models import User
-from apps.common.serializers import UserSerializer
+from apps.common.api.serializers import UsersSerializer
 
 
 class BuyerSerializer(serializers.ModelSerializer):
@@ -13,7 +13,7 @@ class BuyerSerializer(serializers.ModelSerializer):
     В классе есть переопределенный метод create, который привязывает пользователя к созданному клиенту.
     """
 
-    user = UserSerializer(read_only=True, required=False)
+    user = UsersSerializer(read_only=True, required=False)
 
     class Meta:
         model = Buyer
