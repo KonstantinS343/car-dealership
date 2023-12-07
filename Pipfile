@@ -16,6 +16,7 @@ djangorestframework-simplejwt = "*"
 django-filter = "*"
 
 djoser = "*"
+djet = "*"
 
 psycopg2-binary = "*"
 
