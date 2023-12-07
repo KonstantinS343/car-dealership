@@ -12,7 +12,7 @@ from unittest import mock
 
 from djoser.conf import settings as default_settings
 
-from apps.common.tests.common import create_user, perform_create_mock
+from apps.common.conftest import create_user, perform_create_mock
 
 User = get_user_model()
 

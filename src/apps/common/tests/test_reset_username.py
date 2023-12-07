@@ -1,10 +1,9 @@
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.sites.shortcuts import get_current_site
 from django.core import mail
 from django.test.utils import override_settings
-
 from djet import assertions
-
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
@@ -13,12 +12,14 @@ from djoser.conf import settings as default_settings
 
 from apps.common.conftest import create_user
 
+User = get_user_model()
 
-class PasswordResetViewTest(APITestCase, assertions.StatusCodeAssertionsMixin, assertions.EmailAssertionsMixin):
+
+class UsernameResetViewTest(APITestCase, assertions.StatusCodeAssertionsMixin, assertions.EmailAssertionsMixin):
     def setUp(self):
-        self.base_url = reverse("user-reset-password")
+        self.base_url = reverse(f"user-reset-{User.USERNAME_FIELD}")
 
-    def test_post_should_send_email_to_user_with_password_reset_link(self):
+    def test_post_should_send_email_to_user_with_username_reset_link(self):
         user = create_user()
         data = {"email": user.email}
 
@@ -55,7 +56,7 @@ class PasswordResetViewTest(APITestCase, assertions.StatusCodeAssertionsMixin, a
 
         self.assert_status_equal(response, status.HTTP_204_NO_CONTENT)
 
-    @override_settings(DJOSER=dict(settings.DJOSER, **{"PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND": True}))
+    @override_settings(DJOSER=dict(settings.DJOSER, **{"USERNAME_RESET_SHOW_EMAIL_NOT_FOUND": True}))
     def test_post_should_return_bad_request_if_user_does_not_exist(self):
         data = {"email": "john@beatles.com"}
 
