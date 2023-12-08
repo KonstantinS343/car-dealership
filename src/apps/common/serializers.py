@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from apps.common.models import User
+from apps.car_model.api.serilizers import CarSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -21,3 +22,29 @@ class UserSerializer(serializers.ModelSerializer):
             'email_confirmed',
         )
         read_only_fields = fields
+
+
+class ProfitSerializer(serializers.Serializer):
+    """
+    Серилизатор для количества заработанных денег.
+    """
+
+    total_profit = serializers.FloatField()
+
+
+class CarSoldAmountSerializer(serializers.Serializer):
+    """
+    Серилизатор для количества проданных автомобилей.
+    """
+
+    car_model = CarSerializer()
+    cars_amount = serializers.IntegerField()
+
+
+class CarSoldProfitSerializer(serializers.Serializer):
+    """
+    Серилизатор для количества проданных автомобилей.
+    """
+
+    car_model = CarSerializer()
+    final_model_profit = serializers.FloatField()

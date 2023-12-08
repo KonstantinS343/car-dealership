@@ -6,14 +6,8 @@ from rest_framework.decorators import action
 from django.db.utils import IntegrityError
 from django.db.models import Manager
 
-from .serializers import (
-    SupplierSerializer,
-    SupplierCarModelSerializer,
-    UniqueBuyersSuppliersSerializer,
-    SupplierProfitSerializer,
-    CarSoldAmountSerializer,
-    CarSoldProfitSerializer,
-)
+from .serializers import SupplierSerializer, SupplierCarModelSerializer, UniqueBuyersSuppliersSerializer
+from apps.common.serializers import ProfitSerializer, CarSoldAmountSerializer, CarSoldProfitSerializer
 from .permissions import SupplierPermission
 from apps.supplier.model.models import Supplier, SupplierCarModel, UniqueBuyersSuppliers
 from apps.supplier.statistics import supplier_profit, supplier_sold_cars_amount, supplier_sold_cars_profit
@@ -81,7 +75,7 @@ class SupplierViewSet(viewsets.ModelViewSet):
         """
         profit = supplier_profit(supplier_id=pk)
 
-        serializer = SupplierProfitSerializer(profit)
+        serializer = ProfitSerializer(profit)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
