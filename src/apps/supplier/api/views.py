@@ -10,7 +10,7 @@ from .serializers import SupplierSerializer, SupplierCarModelSerializer, UniqueB
 from apps.common.serializers import ProfitSerializer, CarSoldAmountSerializer, CarSoldProfitSerializer
 from .permissions import SupplierPermission
 from apps.supplier.model.models import Supplier, SupplierCarModel, UniqueBuyersSuppliers
-from apps.supplier.statistics import supplier_profit, supplier_sold_cars_amount, supplier_sold_cars_profit
+from apps.common.statistics import profit, cars_amount, cars_money_sale
 
 
 class SupplierViewSet(viewsets.ModelViewSet):
@@ -73,9 +73,9 @@ class SupplierViewSet(viewsets.ModelViewSet):
         """
         Функция возвращает общее количество заработанных денег для поставщика.
         """
-        profit = supplier_profit(supplier_id=pk)
+        profit_supplier = profit(id=pk, type='supplier')
 
-        serializer = ProfitSerializer(profit)
+        serializer = ProfitSerializer(profit_supplier)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -84,18 +84,18 @@ class SupplierViewSet(viewsets.ModelViewSet):
         """
         Функция возвращает количество проданных автомобилей для поставщика.
         """
-        cars_amount = supplier_sold_cars_amount(supplier_id=pk)
+        cars = cars_amount(id=pk, type='supplier')
 
-        serializer = CarSoldAmountSerializer(cars_amount, many=True)
+        serializer = CarSoldAmountSerializer(cars, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(methods=["get"], detail=True, url_path='statistics/cars/sold/profit')
     def supplier_sold_cars_profit(self, request, pk=None) -> Response:
         """
-        Функция возвращает количество заработанных денег с каждой модели для поставщика.
+        Функция возвращает количество заработанных денег по каждой модели для поставщика.
         """
-        cars_profit = supplier_sold_cars_profit(supplier_id=pk)
+        cars_profit = cars_money_sale(id=pk, type='supplier')
 
         serializer = CarSoldProfitSerializer(cars_profit, many=True)
 

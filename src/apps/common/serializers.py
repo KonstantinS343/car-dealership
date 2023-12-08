@@ -26,7 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class ProfitSerializer(serializers.Serializer):
     """
-    Серилизатор для количества заработанных денег.
+    Серилизатор для количества заработанных/потраченных денег.
     """
 
     total_profit = serializers.FloatField()
@@ -34,7 +34,7 @@ class ProfitSerializer(serializers.Serializer):
 
 class CarSoldAmountSerializer(serializers.Serializer):
     """
-    Серилизатор для количества проданных автомобилей.
+    Серилизатор для количества проданных/купленных автомобилей.
     """
 
     car_model = CarSerializer()
@@ -43,7 +43,7 @@ class CarSoldAmountSerializer(serializers.Serializer):
 
 class CarSoldProfitSerializer(serializers.Serializer):
     """
-    Серилизатор для количества проданных автомобилей.
+    Серилизатор для количества заработанных/потраченных денег по моделям.
     """
 
     car_model = CarSerializer()

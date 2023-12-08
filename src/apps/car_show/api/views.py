@@ -8,6 +8,8 @@ from django.db.models import Manager
 from .serializers import CarShowSerializer, CarShowModelSerializer, UniqueBuyersCarDealershipSerializer, CarDealershipSuppliersListSerializer
 from .permissions import CarShowPermission
 from apps.car_show.model.models import CarShow, CarShowModel, UniqueBuyersCarDealership, CarDealershipSuppliersList
+from apps.common.statistics import profit, cars_amount, cars_money_sale
+from apps.common.serializers import CarSoldAmountSerializer, CarSoldProfitSerializer, ProfitSerializer
 
 
 class CarShowViewSet(viewsets.ModelViewSet):
@@ -75,3 +77,36 @@ class CarShowViewSet(viewsets.ModelViewSet):
         if serializer.data:
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"detail": "У данного автосалона нет поставщиков"}, status=status.HTTP_404_NOT_FOUND)
+
+    @action(methods=["get"], detail=True, url_path='statistics/profit')
+    def carshow_profit(self, request, pk=None) -> Response:
+        """
+        Функция возвращает общее количество заработанных денег для автосалона.
+        """
+        carshow_profit = profit(id=pk, type='carshow')
+
+        serializer = ProfitSerializer(carshow_profit)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=["get"], detail=True, url_path='statistics/cars/sold')
+    def carshow_sold_cars_amount(self, request, pk=None) -> Response:
+        """
+        Функция возвращает количество проданных автомобилей для автосалона.
+        """
+        cars = cars_amount(id=pk, type='carshow')
+
+        serializer = CarSoldAmountSerializer(cars, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=["get"], detail=True, url_path='statistics/cars/sold/profit')
+    def carshow_sold_cars_profit(self, request, pk=None) -> Response:
+        """
+        Функция возвращает количество заработанных денег с каждой модели для автосалона.
+        """
+        cars_profit = cars_money_sale(id=pk, type='carshow')
+
+        serializer = CarSoldProfitSerializer(cars_profit, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
