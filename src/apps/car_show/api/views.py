@@ -81,7 +81,7 @@ class CarShowViewSet(viewsets.ModelViewSet):
     @action(methods=["get"], detail=True, url_path='statistics/profit')
     def carshow_profit(self, request, pk=None) -> Response:
         """
-        Функция возвращает общее количество заработанных денег для поставщика.
+        Функция возвращает общее количество заработанных денег для автосалона.
         """
         profit = carshow_profit(carshow_id=pk)
 
@@ -92,7 +92,7 @@ class CarShowViewSet(viewsets.ModelViewSet):
     @action(methods=["get"], detail=True, url_path='statistics/cars/sold')
     def carshow_sold_cars_amount(self, request, pk=None) -> Response:
         """
-        Функция возвращает количество проданных автомобилей для поставщика.
+        Функция возвращает количество проданных автомобилей для автосалона.
         """
         cars_amount = carshow_sold_cars_amount(carshow_id=pk)
 
@@ -103,7 +103,7 @@ class CarShowViewSet(viewsets.ModelViewSet):
     @action(methods=["get"], detail=True, url_path='statistics/cars/sold/profit')
     def carshow_sold_cars_profit(self, request, pk=None) -> Response:
         """
-        Функция возвращает количество заработанных денег с каждой модели для поставщика.
+        Функция возвращает количество заработанных денег с каждой модели для автосалона.
         """
         cars_profit = carshow_sold_cars_profit(carshow_id=pk)
 
