@@ -14,3 +14,12 @@ class PurchasesSalesHistoryQuerySet(models.QuerySet):
 
     def supplier_history(self, id) -> models.Manager[models.Model]:
         return self.filter(supplier_id=id, is_active=True)
+
+    def get_sales(self, queryset) -> models.Manager[models.Model]:
+        return queryset.aggregate(total_profit=models.Sum('final_price'))
+
+    def get_cars_amount(self, queryset) -> models.Manager[models.Model]:
+        return queryset.select_related('car_model').annotate(cars_amount=models.Count('car_model'))
+
+    def get_cars(self, queryset) -> models.Manager[models.Model]:
+        return queryset.annotate(final_model_profit=models.Sum('final_price'))
