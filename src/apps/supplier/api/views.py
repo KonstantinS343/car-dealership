@@ -6,9 +6,17 @@ from rest_framework.decorators import action
 from django.db.utils import IntegrityError
 from django.db.models import Manager
 
-from .serializers import SupplierSerializer, SupplierCarModelSerializer, UniqueBuyersSuppliersSerializer
+from .serializers import (
+    SupplierSerializer,
+    SupplierCarModelSerializer,
+    UniqueBuyersSuppliersSerializer,
+    SupplierProfitSerializer,
+    CarSoldAmountSerializer,
+    CarSoldProfitSerializer,
+)
 from .permissions import SupplierPermission
 from apps.supplier.model.models import Supplier, SupplierCarModel, UniqueBuyersSuppliers
+from apps.supplier.statistics import supplier_profit, supplier_sold_cars_amount, supplier_sold_cars_profit
 
 
 class SupplierViewSet(viewsets.ModelViewSet):
@@ -65,3 +73,36 @@ class SupplierViewSet(viewsets.ModelViewSet):
         if serializer.data:
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"detail": "У данного поставщика нет уникальных клиентов"}, status=status.HTTP_404_NOT_FOUND)
+
+    @action(methods=["get"], detail=True, url_path='statistics/profit')
+    def supplier_profit(self, request, pk=None) -> Response:
+        """
+        Функция возвращает общее количество заработанных денег для поставщика.
+        """
+        profit = supplier_profit(supplier_id=pk)
+
+        serializer = SupplierProfitSerializer(profit)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=["get"], detail=True, url_path='statistics/cars/sold')
+    def supplier_sold_cars_amount(self, request, pk=None) -> Response:
+        """
+        Функция возвращает количество проданных автомобилей для поставщика.
+        """
+        cars_amount = supplier_sold_cars_amount(supplier_id=pk)
+
+        serializer = CarSoldAmountSerializer(cars_amount, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=["get"], detail=True, url_path='statistics/cars/sold/profit')
+    def supplier_sold_cars_profit(self, request, pk=None) -> Response:
+        """
+        Функция возвращает количество заработанных денег с каждой модели для поставщика.
+        """
+        cars_profit = supplier_sold_cars_profit(supplier_id=pk)
+
+        serializer = CarSoldProfitSerializer(cars_profit, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)

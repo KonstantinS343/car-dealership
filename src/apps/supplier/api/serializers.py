@@ -62,3 +62,29 @@ class UniqueBuyersSuppliersSerializer(serializers.ModelSerializer):
             'supplier',
             'car_dealership',
         )
+
+
+class SupplierProfitSerializer(serializers.Serializer):
+    """
+    Серилизатор для количества заработанных поставщиком денег.
+    """
+
+    total_profit = serializers.FloatField()
+
+
+class CarSoldAmountSerializer(serializers.Serializer):
+    """
+    Серилизатор для количества проданных автомобилей для поставщика.
+    """
+
+    car_model = CarSerializer()
+    cars_amount = serializers.IntegerField()
+
+
+class CarSoldProfitSerializer(serializers.Serializer):
+    """
+    Серилизатор для количества проданных автомобилей для поставщика.
+    """
+
+    car_model = CarSerializer()
+    final_model_profit = serializers.FloatField()
