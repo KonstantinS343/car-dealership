@@ -5,6 +5,7 @@ from ddf import G
 from typing import Dict
 
 from apps.car_show.model.models import CarShow
+from apps.purchase_history.model.models import PurchasesSalesHistoryСarShow
 
 
 @pytest.fixture(scope='function')
@@ -32,3 +33,9 @@ def carshow_partial_update_data() -> Dict[str, str]:
         "name": "Test",
         "car_body": 'Sedan',
     }
+
+
+@pytest.fixture(scope='function')
+def carshow_history(db, carshow) -> PurchasesSalesHistoryСarShow:
+    history = G(PurchasesSalesHistoryСarShow, car_dealership=carshow)
+    return history
