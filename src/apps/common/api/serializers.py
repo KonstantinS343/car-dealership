@@ -5,6 +5,7 @@ from djoser.serializers import UserCreateSerializer
 from django.utils.translation import gettext_lazy as _
 
 from apps.common.models import User
+from apps.car_model.api.serilizers import CarSerializer
 
 
 class UsersSerializer(serializers.ModelSerializer):
@@ -39,3 +40,29 @@ class CustomUserCreateSerializer(UserCreateSerializer):
         if User.objects.filter(email=email).exists():
             raise serializers.ValidationError(_("Пользователь с такой почтой уже существует."))
         return email
+
+
+class ProfitSerializer(serializers.Serializer):
+    """
+    Серилизатор для количества заработанных/потраченных денег.
+    """
+
+    total_profit = serializers.FloatField()
+
+
+class CarSoldAmountSerializer(serializers.Serializer):
+    """
+    Серилизатор для количества проданных/купленных автомобилей.
+    """
+
+    car_model = CarSerializer()
+    cars_amount = serializers.IntegerField()
+
+
+class CarSoldProfitSerializer(serializers.Serializer):
+    """
+    Серилизатор для количества заработанных/потраченных денег по моделям.
+    """
+
+    car_model = CarSerializer()
+    final_model_profit = serializers.FloatField()
