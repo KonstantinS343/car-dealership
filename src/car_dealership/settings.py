@@ -50,7 +50,17 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 
-THIRD_PARTY_APPS = ['rest_framework', 'debug_toolbar', 'drf_yasg', 'corsheaders', 'django_countries', 'rest_framework_simplejwt', 'django_filters', 'djoser']
+THIRD_PARTY_APPS = [
+    'rest_framework',
+    'debug_toolbar',
+    'drf_yasg',
+    'corsheaders',
+    'django_countries',
+    'rest_framework_simplejwt',
+    'django_filters',
+    'djoser',
+    'django_celery_beat',
+]
 
 LOCAL_APPS = ['apps.car_show', 'apps.car_model', 'apps.buyer', 'apps.common', 'apps.supplier', 'apps.purchase_history', 'apps.action']
 
@@ -192,3 +202,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+CELERY_BROKER_URL = f'redis://{env("CELERY_HOST")}:{env("CELERY_PORT")}'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'

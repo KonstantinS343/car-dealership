@@ -19,9 +19,11 @@ djoser = "*"
 djet = "*"
 
 psycopg2-binary = "*"
+redis = "*"
 
 coreapi = "*"
 
+django-celery-beat = "*"
 celery = "*"
 flower = "*"
 

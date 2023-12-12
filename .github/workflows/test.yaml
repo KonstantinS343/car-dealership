@@ -24,6 +24,11 @@ jobs:
         ports:
           - 5432:5432
 
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+
     steps:
       - uses: actions/checkout@v3
 
@@ -58,6 +63,8 @@ jobs:
           LANGUAGE_CODE: ru
           DEBUG: true
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          CELERY_HOST: localhost
+          CELERY_PORT: 6379
 
       - name: Publish test results
         uses: EnricoMi/publish-unit-test-result-action@v2
@@ -67,14 +74,3 @@ jobs:
             test-results.xml
             test-results/**/*.xml
             test-results/**/*.json
-        env:
-          ENGINE: django.db.backends.postgresql
-          POSTGRES_DB: postgres
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: secret
-          HOST: localhost
-          PORT: 5432
-          TIME_ZONE: Europe/Moscow
-          LANGUAGE_CODE: ru
-          DEBUG: true
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}

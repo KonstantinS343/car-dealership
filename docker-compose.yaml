@@ -11,7 +11,6 @@ services:
     build: 
       context: .
     command: sh -c "python src/manage.py collectstatic --noinput &&
-                    python src/manage.py makemigrations &&
                     python src/manage.py migrate &&
                     python src/manage.py runserver 0.0.0.0:7000"
     ports:
@@ -22,6 +21,54 @@ services:
       - static_files:/home/car_dealership/src/static
     depends_on:
       - db
+
+  redis:
+    image: redis:latest
+    container_name: redis_carshow
+    ports:
+      - "6378:6379"
+
+  celery:
+    build:
+        context: .
+    command: sh -c "cd src && celery -A car_dealership worker -l info"
+    env_file:
+      - ./src/.env
+    volumes:
+      - .:/home/car_dealership
+    container_name: celery_carshow
+
+    depends_on:
+      - redis
+
+  celery_beat:
+    build:
+        context: .
+    command: sh -c "cd src && celery -A car_dealership beat -l info"
+    env_file:
+      - ./src/.env
+    volumes:
+      - .:/home/car_dealership
+    container_name: celery_beat_carshow
+
+    depends_on:
+      - redis
+
+  flower:
+    build:
+        context: .
+    command: sh -c "cd src && celery -A car_dealership flower"
+    env_file:
+      - ./src/.env
+    volumes:
+      - .:/home/car_dealership
+    container_name: flower_carshow
+    ports:
+      - "8888:5555"
+    
+    depends_on:
+      - redis
+      - celery
 
 volumes:
   static_files:
