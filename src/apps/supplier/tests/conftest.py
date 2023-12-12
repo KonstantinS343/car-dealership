@@ -5,6 +5,7 @@ from ddf import G
 from typing import Dict
 
 from apps.supplier.model.models import Supplier
+from apps.purchase_history.model.models import PurchasesSalesHistorySupplier
 
 
 @pytest.fixture(scope='function')
@@ -24,3 +25,9 @@ def supplier_partial_update_data() -> Dict[str, str | int]:
         "name": "Test",
         "year_foundation": 2000,
     }
+
+
+@pytest.fixture(scope='function')
+def supplier_history(db, supplier) -> PurchasesSalesHistorySupplier:
+    history = G(PurchasesSalesHistorySupplier, supplier=supplier)
+    return history
