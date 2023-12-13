@@ -1,14 +1,16 @@
 from django.core.management.base import BaseCommand
 from django.db import transaction
+from django.utils import timezone
 
 import random
 
 from apps.buyer.model.models import Buyer
 from apps.car_model.model.models import Car
-from apps.car_show.model.models import CarShow, UniqueBuyersCarDealership
+from apps.car_show.model.models import CarShow, UniqueBuyersCarDealership, CarDealershipSuppliersList, CarShowModel
 from apps.common.models import User
 from apps.supplier.model.models import Supplier, SupplierCarModel, UniqueBuyersSuppliers
 from apps.purchase_history.model.models import PurchasesSalesHistorySupplier, PurchasesSalesHistoryСarShow
+from apps.action.model.models import ActionCarDealership, ActionSupplier
 
 
 def gen_float(a: float, b: float, precision: int = 2) -> float:
@@ -18,7 +20,7 @@ def gen_float(a: float, b: float, precision: int = 2) -> float:
 class Command(BaseCommand):
     """
     Класс, который реализует команду заполнения базы данных.
-    Создается клиентов - 10, поставщиков - 10, автосалонов - 5, автомобилей - 50,
+    Создается клиентов - 10, поставщиков - 10, автосалонов - 5, автомобилей - 100,
     уникальных клиентов автосалона - 5, уникальных клиентов поставщиков - 4,
     продажи всех поставщиков - 20, продажи всех автосалонов - 20, покупки всех клиентов - 20.
     """
@@ -67,10 +69,18 @@ class Command(BaseCommand):
         Функция создания автомобилей и распредление автомобилей.
         """
         self.car_list = []
-        for i in range(50):
+        for i in range(100):
             car = Car.objects.create(brand=random.choice(Command.CAR_BRANDS), **random.choice(self.cars_specifications))
             SupplierCarModel.objects.create(supplier=random.choice(self.suppliers_list), car_model=car, price=gen_float(30000.0, 200000.0))
             self.car_list.append(car)
+
+        for i in range(40):
+            CarShowModel.objects.create(
+                car_dealership=random.choice(self.carshow_list),
+                car_model=random.choice(self.car_list),
+                model_amount=random.randint(1, 10),
+                price=gen_float(30000.0, 200000.0),
+            )
 
     def gen_unique_buyers_carshow(self) -> None:
         """
@@ -110,6 +120,49 @@ class Command(BaseCommand):
                 final_price=gen_float(30000.0, 200000.0),
             )
 
+    def gen_carshow_supplier_list(self) -> None:
+        """
+        Функция для генерации постоянных поставщиков для автосалонов.
+        """
+        for i in self.carshow_list:
+            random_suppliers = random.choices(self.suppliers_list)
+            for j in random_suppliers:
+                CarDealershipSuppliersList.objects.create(car_dealership=i, supplier=j)
+
+    def gen_carshow_actions(self) -> None:
+        """
+        Функция для генерации акций на автомобили в автосалоне.
+        """
+        for i in range(15):
+            carshow = random.choice(self.carshow_list)
+            carshow_models = CarShowModel.objects.filter(car_dealership=carshow)
+            ActionCarDealership.objects.create(
+                name=f'Action {i}',
+                descritpion='Action',
+                event_start=timezone.now().date() - timezone.timedelta(days=random.randint(0, 30)),
+                event_end=timezone.now().date() + timezone.timedelta(days=random.randint(0, 30)),
+                discount=gen_float(0.0, 1.0, 1),
+                car_dealership=carshow,
+                car_model=random.choice(carshow_models).car_model,
+            )
+
+    def gen_carshow_supplier(self) -> None:
+        """
+        Функция для генерации акций на автомобили у поставщика.
+        """
+        for i in range(15):
+            supplier = random.choice(self.suppliers_list)
+            supplier_models = SupplierCarModel.objects.filter(supplier=supplier)
+            ActionSupplier.objects.create(
+                name=f'Action {i}',
+                descritpion='Action',
+                event_start=timezone.now().date() - timezone.timedelta(days=random.randint(0, 30)),
+                event_end=timezone.now().date() + timezone.timedelta(days=random.randint(0, 30)),
+                discount=gen_float(0.0, 1.0, 1),
+                supplier=supplier,
+                car_model=random.choice(supplier_models).car_model,
+            )
+
     @transaction.atomic
     def handle(self, *args, **kwargs):
         self.gen_user()
@@ -119,3 +172,6 @@ class Command(BaseCommand):
         self.gen_unique_buyers_supplier()
         self.gen_history_buyer_carshow()
         self.gen_history_buyer_supplier()
+        self.gen_carshow_supplier_list()
+        self.gen_carshow_actions()
+        self.gen_carshow_supplier()
