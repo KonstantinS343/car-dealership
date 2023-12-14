@@ -21,7 +21,7 @@ class Command(BaseCommand):
     """
     Класс, который реализует команду заполнения базы данных.
     Создается клиентов - 10, поставщиков - 10, автосалонов - 5, автомобилей - 100,
-    уникальных клиентов автосалона - 5, уникальных клиентов поставщиков - 4,
+    уникальных клиентов автосалона - 5,
     продажи всех поставщиков - 20, продажи всех автосалонов - 20, покупки всех клиентов - 20.
     """
 
@@ -89,13 +89,6 @@ class Command(BaseCommand):
         for i in range(5):
             UniqueBuyersCarDealership.objects.create(car_dealership=random.choice(self.carshow_list), buyer=random.choice(self.buyer_list))
 
-    def gen_unique_buyers_supplier(self) -> None:
-        """
-        Функция для генерации постоянных клиентов поставщика.
-        """
-        for i in range(4):
-            UniqueBuyersSuppliers.objects.create(car_dealership=random.choice(self.carshow_list), supplier=random.choice(self.suppliers_list))
-
     def gen_history_buyer_carshow(self) -> None:
         """
         Функция для генерации истории продаж автосалонов и истории покупок покупетелей.
@@ -122,12 +115,13 @@ class Command(BaseCommand):
 
     def gen_carshow_supplier_list(self) -> None:
         """
-        Функция для генерации постоянных поставщиков для автосалонов.
+        Функция для генерации постоянных поставщиков для автосалонов, а также уникальных клиентов поставщиков.
         """
         for i in self.carshow_list:
             random_suppliers = random.choices(self.suppliers_list)
             for j in random_suppliers:
                 CarDealershipSuppliersList.objects.create(car_dealership=i, supplier=j)
+                UniqueBuyersSuppliers.objects.create(car_dealership=i, supplier=j)
 
     def gen_carshow_actions(self) -> None:
         """
@@ -169,7 +163,6 @@ class Command(BaseCommand):
         self.gen_carshow()
         self.gen_cars()
         self.gen_unique_buyers_carshow()
-        self.gen_unique_buyers_supplier()
         self.gen_history_buyer_carshow()
         self.gen_history_buyer_supplier()
         self.gen_carshow_supplier_list()
