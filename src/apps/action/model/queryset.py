@@ -10,3 +10,6 @@ class ActionQuerySet(models.QuerySet):
 
     def actions(self) -> Manager[models.Model]:
         return self.filter(is_active=True)
+
+    def get_action_by_car_supplier(self, supplier, car_model) -> Manager[models.Model]:
+        return self.filter(supplier=supplier, car_model=car_model)

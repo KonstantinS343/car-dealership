@@ -14,7 +14,7 @@ app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
     'carshow-supplier-purchase-10-minute': {
-        'task': 'apps.common.tasks.buy_car',
+        'task': 'apps.common.tasks.carshow_buy_car',
         'schedule': crontab(minute='*/10'),
     },
 }
