@@ -74,13 +74,16 @@ class Command(BaseCommand):
             SupplierCarModel.objects.create(supplier=random.choice(self.suppliers_list), car_model=car, price=gen_float(30000.0, 200000.0))
             self.car_list.append(car)
 
-        for i in range(40):
-            CarShowModel.objects.create(
-                car_dealership=random.choice(self.carshow_list),
-                car_model=random.choice(self.car_list),
-                model_amount=random.randint(1, 10),
-                price=gen_float(30000.0, 200000.0),
-            )
+        for i in range(50):
+            random_carshow = random.choice(self.carshow_list)
+            random_car = random.choice(self.car_list)
+            if not CarShowModel.object.filter(car_dealership=random_carshow, car_model=random_car):
+                CarShowModel.objects.create(
+                    car_dealership=random_carshow,
+                    car_model=random_car,
+                    model_amount=random.randint(1, 10),
+                    price=gen_float(30000.0, 200000.0),
+                )
 
     def gen_unique_buyers_carshow(self) -> None:
         """
