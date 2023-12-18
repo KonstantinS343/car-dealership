@@ -13,3 +13,6 @@ class ActionQuerySet(models.QuerySet):
 
     def get_action_by_car_supplier(self, supplier, car_model) -> Manager[models.Model]:
         return self.filter(supplier=supplier, car_model=car_model)
+
+    def get_action_by_car_carshow(self, carshow, car_model) -> Manager[models.Model]:
+        return self.filter(car_dealership=carshow, car_model=car_model)
