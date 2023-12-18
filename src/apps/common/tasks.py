@@ -56,7 +56,7 @@ def carshow_buy_car():
                 new_price = car_for_buy.price + (EXTRA_CHARGE * car_for_buy.price)
                 shop_car = CarShowModel.objects.update_or_create(car_dealership=shop, car_model=car_for_buy.car_model)
                 if not shop_car[1]:
-                    shop_car[0].count += 1
+                    shop_car[0].model_amount += 1
                 shop_car[0].price = new_price
                 shop_car[0].save()
 
