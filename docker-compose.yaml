@@ -10,9 +10,7 @@ services:
   django:
     build: 
       context: .
-    command: sh -c "python src/manage.py collectstatic --noinput &&
-                    python src/manage.py migrate &&
-                    python src/manage.py runserver 0.0.0.0:7000"
+    command: gunicorn car_dealership.wsgi:application --bind 0.0.0.0:7000
     ports:
       - "7000:7000"
     env_file: ./src/.env
@@ -69,6 +67,16 @@ services:
     depends_on:
       - redis
       - celery
+  
+  nginx:
+    restart: always
+    image: nginx:latest
+    ports:
+      - "1000:80"
+    volumes:
+      - static_files:/home/car_dealership/src/static
+    depends_on:
+      - django
 
 volumes:
   static_files:
