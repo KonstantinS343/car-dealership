@@ -122,10 +122,15 @@ class Migration(migrations.Migration):
                 ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Время создания')),
                 ('update_at', models.DateTimeField(auto_now=True, verbose_name='Время обновления')),
                 ('is_active', models.BooleanField(default=True, verbose_name='Активный')),
-                ('model_amount', models.IntegerField(validators=[django.core.validators.MinValueValidator(0)], verbose_name='Количество автомобилей')),
+                (
+                    'model_amount',
+                    models.IntegerField(default=1, validators=[django.core.validators.MinValueValidator(0)], verbose_name='Количество автомобилей'),
+                ),
                 (
                     'price',
-                    models.DecimalField(decimal_places=2, max_digits=10, validators=[django.core.validators.MinValueValidator(0.0)], verbose_name='Цена'),
+                    models.DecimalField(
+                        default=0.0, decimal_places=2, max_digits=10, validators=[django.core.validators.MinValueValidator(0.0)], verbose_name='Цена'
+                    ),
                 ),
                 (
                     'car_dealership',

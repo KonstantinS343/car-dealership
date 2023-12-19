@@ -13,3 +13,9 @@ class CarShowQuerySet(models.QuerySet):
 
     def get_carshow_by_id(self, id) -> Manager[models.Model]:
         return self.filter(car_dealership_id=id, is_active=True)
+
+    def get_all_active_carshow(self) -> Manager[models.Model]:
+        return self.filter(user__email_confirmed=True, is_active=True)
+
+    def get_supplier_from_supplier_list(self, carshow) -> Manager[models.Model]:
+        return self.filter(car_dealership=carshow)

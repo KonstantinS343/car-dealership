@@ -55,8 +55,8 @@ class CarShow(TimeStampedUUIDModel):
 class CarShowModel(TimeStampedUUIDModel):
     car_dealership = models.ForeignKey(CarShow, on_delete=models.CASCADE, related_name='car_show_model_car_dealership', verbose_name=_("Автосалон"))
     car_model = models.ForeignKey('car_model.Car', on_delete=models.CASCADE, related_name='car_show_model_car', verbose_name=_("Модель автомобиля"))
-    model_amount = models.IntegerField(verbose_name=_("Количество автомобилей"), validators=[MinValueValidator(0)])
-    price = models.DecimalField(verbose_name=_("Цена"), validators=[MinValueValidator(0.0)], max_digits=10, decimal_places=2)
+    model_amount = models.IntegerField(verbose_name=_("Количество автомобилей"), validators=[MinValueValidator(0)], default=1)
+    price = models.DecimalField(verbose_name=_("Цена"), validators=[MinValueValidator(0.0)], max_digits=10, decimal_places=2, default=0.0)
 
     objects = models.Manager.from_queryset(CarShowQuerySet)()
 

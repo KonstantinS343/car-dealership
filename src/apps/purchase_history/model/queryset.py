@@ -23,3 +23,6 @@ class PurchasesSalesHistoryQuerySet(models.QuerySet):
 
     def get_cars(self, queryset) -> models.Manager[models.Model]:
         return queryset.annotate(final_model_profit=models.Sum('final_price'))
+
+    def get_popular_car_brand(self) -> models.Manager[models.Manager]:
+        return self.values('car_model__brand').annotate(count_car=models.Count('car_dealership_id')).order_by('-count_car')
