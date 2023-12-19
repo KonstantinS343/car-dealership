@@ -21,4 +21,8 @@ app.conf.beat_schedule = {
         'task': 'apps.common.tasks.buyer_buy_car',
         'schedule': crontab(minute='*/10'),
     },
+    'check-carshow-regular-supplier-list-1-hour': {
+        'task': 'apps.common.tasks.check_supplier_list',
+        'schedule': crontab(hour='*/1'),
+    },
 }
