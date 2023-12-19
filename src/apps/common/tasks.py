@@ -3,13 +3,22 @@ from celery import shared_task
 from django.utils import timezone
 from decimal import Decimal
 
-from apps.car_show.model.models import CarShow, CarDealershipSuppliersList, CarShowModel
+from typing import NamedTuple, Dict
+import random
+
+from apps.car_show.model.models import CarShow, CarDealershipSuppliersList, CarShowModel, UniqueBuyersCarDealership
 from apps.purchase_history.model.models import PurchasesSalesHistoryСarShow, PurchasesSalesHistorySupplier
 from apps.supplier.model.models import SupplierCarModel
-from apps.action.model.models import ActionSupplier
+from apps.action.model.models import ActionSupplier, ActionCarDealership
+from apps.buyer.model.models import Buyer
 
 REGULAR_CUSTOMER_DISCOUNT = Decimal(0.8)
 EXTRA_CHARGE = Decimal(0.2)
+
+
+class Offer(NamedTuple):
+    specification: Dict[str, str | float]
+    max_price: Decimal
 
 
 @shared_task
@@ -67,3 +76,55 @@ def carshow_buy_car():
                 )
 
                 print(f'Car Dealership {shop.name} BUY {car_for_buy.car_model.brand} PRICE {car_for_buy.price} NEW PRICE {new_price}')
+
+
+@shared_task
+def buyer_buy_car():
+    clients = Buyer.objects.get_all_active_buyer()
+
+    for client in clients.iterator():
+        max_price = round(random.uniform(30000.0, 200000.0), 2)
+        while max_price > client.balance:
+            max_price = round(random.uniform(30000.0, 200000.0), 2)
+
+        offer = Offer(
+            specification={
+                'fuel_type': random.choice(CarShow.FUEL_TYPE)[0],
+                'gearbox_type': random.choice(CarShow.GEARBOX_TYPE)[0],
+                'car_body': random.choice(CarShow.CAR_BODY_TYPE)[0],
+            },
+            max_price=Decimal(max_price),
+        )
+        reqular_clients = UniqueBuyersCarDealership.objects.get_unique_buyer(buyer=client)
+        cars_for_buy = []
+        for j in reqular_clients.iterator():
+            car = CarShowModel.objects.get_car_with_lowest_price(specification=offer.specification, carshow=j.car_dealership)
+            if car:
+                car.price *= REGULAR_CUSTOMER_DISCOUNT  # скидка постоянного покупателя
+                if car.price < offer.max_price:
+                    cars_for_buy.append(car)
+        carshow_car = CarShowModel.objects.get_car_with_lowest_price(specification=offer.specification)
+        if carshow_car:
+            if carshow_car.price < offer.max_price:
+                cars_for_buy.append(carshow_car)
+        for item in cars_for_buy:
+            action = ActionCarDealership.objects.get_action_by_car_carshow(carshow=item.car_dealership, car_model=item.car_model)
+            if action:
+                action = sorted(action, key=lambda x: x.discount, reverse=True)
+                for j in action:
+                    today = timezone.now().date()
+                    if today > j.event_start and today < j.event_end:
+                        item.price *= 1 - j.discount
+
+        try:
+            car_for_buy = sorted(cars_for_buy, key=lambda x: x.price)[0]
+        except IndexError:
+            continue
+        else:
+            client.balance -= car_for_buy.price
+            shop_car = car_for_buy
+            shop_car.model_amount -= 1
+            shop_car.save()
+            client.save()
+            PurchasesSalesHistoryСarShow.objects.create(car_dealership=shop_car, buyer=client, car_model=car_for_buy.car_model, final_price=car_for_buy.price)
+            print(f'Buyer {client.user.username} BUY {car_for_buy.car_model.brand} PRICE {car_for_buy.price}')

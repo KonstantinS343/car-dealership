@@ -17,4 +17,8 @@ app.conf.beat_schedule = {
         'task': 'apps.common.tasks.carshow_buy_car',
         'schedule': crontab(minute='*/10'),
     },
+    'buyer-carshow-purchase-10-minute': {
+        'task': 'apps.common.tasks.buyer_buy_car',
+        'schedule': crontab(minute='*/10'),
+    },
 }
