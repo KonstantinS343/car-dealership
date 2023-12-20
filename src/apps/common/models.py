@@ -11,6 +11,10 @@ class TimeStampedUUIDModel(models.Model):
     update_at = models.DateTimeField(auto_now=True, verbose_name=_("Время обновления"))
     is_active = models.BooleanField(_("Активный"), default=True)
 
+    def delete(self) -> None:
+        self.is_active = False
+        self.save()
+
     class Meta:
         abstract = True
 
