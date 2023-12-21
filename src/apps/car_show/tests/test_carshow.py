@@ -45,6 +45,9 @@ class TestCarShow:
     @pytest.mark.parametrize('user_type', [2])
     def test_delete(self, user_type, api_client, carshow) -> None:
         response = api_client.delete(f"{self.endpoint}{carshow.id}/")
+        carshow = CarShow.objects.get(id=carshow.id)
+
+        assert not carshow.is_active
 
         assert response.status_code == status.HTTP_204_NO_CONTENT
 

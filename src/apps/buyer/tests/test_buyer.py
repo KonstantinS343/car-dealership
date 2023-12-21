@@ -41,6 +41,9 @@ class TestBuyer:
     @pytest.mark.parametrize('user_type', [1])
     def test_delete(self, user_type, api_client, buyer) -> None:
         response = api_client.delete(f"{self.endpoint}{buyer.id}/")
+        buyer = Buyer.objects.get(id=buyer.id)
+
+        assert not buyer.is_active
 
         assert response.status_code == status.HTTP_204_NO_CONTENT
 

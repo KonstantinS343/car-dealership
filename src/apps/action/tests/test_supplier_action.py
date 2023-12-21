@@ -49,6 +49,9 @@ class TestActionSupplier:
 
         if user_type == 3:
             assert response.status_code == status.HTTP_204_NO_CONTENT
+            action = ActionSupplier.objects.get(id=supplier_action.id)
+
+            assert not action.is_active
         else:
             assert response.status_code == status.HTTP_403_FORBIDDEN
 

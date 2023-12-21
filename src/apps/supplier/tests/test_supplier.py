@@ -43,6 +43,9 @@ class TestSupplier:
     @pytest.mark.parametrize('user_type', [3])
     def test_delete(self, user_type, api_client, supplier) -> None:
         response = api_client.delete(f"{self.endpoint}{supplier.id}/")
+        supplier = Supplier.objects.get(id=supplier.id)
+
+        assert not supplier.is_active
 
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
