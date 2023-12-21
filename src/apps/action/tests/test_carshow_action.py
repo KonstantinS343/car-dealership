@@ -48,6 +48,9 @@ class TestActionCarShow:
 
         if user_type == 2:
             assert response.status_code == status.HTTP_204_NO_CONTENT
+            action = ActionCarDealership.objects.get(id=carshow_action.id)
+
+            assert not action.is_active
         else:
             assert response.status_code == status.HTTP_403_FORBIDDEN
 
