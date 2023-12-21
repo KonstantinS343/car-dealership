@@ -28,3 +28,6 @@ class SupplierQuerySet(models.QuerySet):
         if supplier:
             filter_kwargs['supplier'] = supplier
         return self.filter(**filter_kwargs).order_by('price').first()
+
+    def get_unique_suppliers_carshow(self, carshow) -> List[Manager[models.Model]]:
+        return [i.supplier for i in self.filter(car_dealership=carshow)]
