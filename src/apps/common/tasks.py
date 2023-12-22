@@ -146,7 +146,7 @@ def buyer_buy_car():
             purchase_amount = len(PurchasesSalesHistoryСarShow.objects.buyer_history(id=client.id))
 
             if purchase_amount > 10:
-                UniqueBuyersCarDealership.objects.create(car_dealership=shop_car, buyer=client)
+                UniqueBuyersCarDealership.objects.create(car_dealership=shop_car.car_dealership, buyer=client)
             print(f'Buyer {client.user.username} BUY {car_for_buy.car_model.brand} PRICE {car_for_buy.price}')
 
 
