@@ -34,4 +34,4 @@ class SupplierQuerySet(models.QuerySet):
         return self.filter(**filter_kwargs).order_by('price').first()
 
     def get_unique_suppliers_carshow(self, carshow) -> List[Manager[models.Model]]:
-        return [i.supplier for i in self.filter(car_dealership=carshow)]
+        return [i.supplier for i in self.filter(car_dealership=carshow, is_active=True)]
