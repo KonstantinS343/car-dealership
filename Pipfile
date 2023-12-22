@@ -12,16 +12,31 @@ django_redis = "*"
 django-debug-toolbar = "*"
 django-environ = "*"
 django-countries = "*"
+djangorestframework-simplejwt = "*"
+django-filter = "*"
+
+djoser = "*"
+djet = "*"
 
 psycopg2-binary = "*"
+redis = "*"
 
 coreapi = "*"
 
+django-celery-beat = "*"
 celery = "*"
 flower = "*"
 
+flake8 = "*"
+mypy = "*"
+black = "*"
+pre-commit = "*"
+
+gunicorn = "*"
+
 [dev-packages]
-pytest = "*"
+pytest-django = "*"
+django-dynamic-fixture = "*"
 
 [requires]
-python_version = "3.10"
+python_version = "3.11"
