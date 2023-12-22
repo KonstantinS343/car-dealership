@@ -56,7 +56,7 @@ class CarShowViewSet(viewsets.ModelViewSet):
         Функция возвращает список поставщиков автосалона, если у автосалона еще нет поставщиков,
         то функция возвращает 404 страницу.
         """
-        suppliers = CarDealershipSuppliersList.objects.get_carshow_by_id(id=pk)
+        suppliers = CarDealershipSuppliersList.objects.get_carshow_by_id_supplier_list(id=pk)
 
         serializer = CarDealershipSuppliersListSerializer(suppliers, many=True)
 
@@ -70,7 +70,7 @@ class CarShowViewSet(viewsets.ModelViewSet):
         Функция возвращает список уникальных клиентов автосалона, если у автосалона еще нет уникальных клиентов,
         то функция возвращает 404 страницу.
         """
-        clients = UniqueBuyersCarDealership.objects.get_carshow_by_id(id=pk)
+        clients = UniqueBuyersCarDealership.objects.get_carshow_by_id_unique_buyer(id=pk)
 
         serializer = UniqueBuyersCarDealershipSerializer(clients, many=True)
 

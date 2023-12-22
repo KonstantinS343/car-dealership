@@ -60,7 +60,7 @@ class SupplierViewSet(viewsets.ModelViewSet):
         Функция возвращает список уникальных клиентов поставщика, если у автосалона еще нет уникальных поставщика,
         то функция возвращает 404 страницу.
         """
-        clients = UniqueBuyersSuppliers.objects.get_supplier_by_id(supplier=pk)
+        clients = UniqueBuyersSuppliers.objects.get_supplier_by_id_unique_carshow(supplier=pk)
 
         serializer = UniqueBuyersSuppliersSerializer(clients, many=True)
 

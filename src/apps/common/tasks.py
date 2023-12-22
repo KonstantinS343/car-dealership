@@ -23,6 +23,9 @@ class Offer(NamedTuple):
 
 @shared_task
 def carshow_buy_car():
+    """
+    Скрипт покупки авто у поставщиков.
+    """
     shops = CarShow.objects.get_all_active_carshow()
     most_popular_car = PurchasesSalesHistoryСarShow.objects.get_popular_car_brand()
 
@@ -81,11 +84,16 @@ def carshow_buy_car():
                 if purchase_amount > 10:
                     UniqueBuyersSuppliers.objects.create(car_dealership=shop, supplier=car_for_buy.supplier)
 
-                print(f'Car Dealership {shop.name} BUY {car_for_buy.car_model.brand} PRICE {car_for_buy.price} NEW PRICE {new_price}')
+                print(
+                    f'Car Dealership {shop.name} BUY {car_for_buy.car_model.brand} ID {car_for_buy.car_model.id} PRICE {car_for_buy.price} NEW PRICE {new_price}'
+                )
 
 
 @shared_task
 def buyer_buy_car():
+    """
+    Скрипт покупки авто у автосалонов.
+    """
     clients = Buyer.objects.get_all_active_buyer()
 
     for client in clients.iterator():
@@ -132,7 +140,9 @@ def buyer_buy_car():
             shop_car.model_amount -= 1
             shop_car.save()
             client.save()
-            PurchasesSalesHistoryСarShow.objects.create(car_dealership=shop_car, buyer=client, car_model=car_for_buy.car_model, final_price=car_for_buy.price)
+            PurchasesSalesHistoryСarShow.objects.create(
+                car_dealership=shop_car.car_dealership, buyer=client, car_model=car_for_buy.car_model, final_price=car_for_buy.price
+            )
             purchase_amount = len(PurchasesSalesHistoryСarShow.objects.buyer_history(id=client.id))
 
             if purchase_amount > 10:
@@ -142,6 +152,9 @@ def buyer_buy_car():
 
 @shared_task
 def check_supplier_list():
+    """
+    Скрипт проверки списка поставщиков автосалона.
+    """
     shops = CarShow.objects.get_all_active_carshow()
 
     for shop in shops.iterator():
@@ -179,8 +192,10 @@ def check_supplier_list():
             suppliers_list = [i.supplier for i in reqular_supplier]
             if best_car_offer.supplier not in suppliers_list:
                 CarDealershipSuppliersList.objects.create(car_dealership=shop, supplier=best_car_offer.supplier)
+                print(f'Car Dealership {shop.name} ADD NEW SUPPLIER {best_car_offer.supplier}')
             worst_car_offer = cars_for_buy[-1]
             if worst_car_offer.supplier in suppliers_list and worst_car_offer != best_car_offer:
-                CarDealershipSuppliersList.objects.delete(car_dealership=shop, supplier=worst_car_offer.supplier)
+                CarDealershipSuppliersList.objects.get(car_dealership=shop, supplier=worst_car_offer.supplier).delete()
+                print(f'Car Dealership {shop.name} DELETE SUPPLIER {worst_car_offer.supplier}')
         except IndexError:
             continue

@@ -11,14 +11,16 @@ class SupplierQuerySet(models.QuerySet):
     """
 
     def get_supplier_by_id(self, supplier) -> Manager[models.Model]:
-        return self.filter(supplier_id=supplier, is_active=True)
+        return self.filter(supplier_id=supplier, is_active=True).select_related('car_model', 'supplier')
+
+    def get_supplier_by_id_unique_carshow(self, supplier) -> Manager[models.Model]:
+        return self.filter(supplier_id=supplier, is_active=True).select_related('car_dealership', 'supplier')
 
     def get_supplier_by_user_id(self, user) -> Manager[models.Model]:
         return self.filter(user_id=user, is_active=True)
 
-    def get_car_with_lowest_price(self, specification, brand, supplier=None) -> List[Manager[models.Model]]:
+    def get_car_with_lowest_price(self, specification, brand=None, supplier=None) -> List[Manager[models.Model]]:
         filter_kwargs = {
-            'car_model__brand': brand,
             'car_model__weight': specification["weight"],
             'car_model__engine_capacity': specification["engine_capacity"],
             'car_model__fuel_type': specification["fuel_type"],
@@ -27,6 +29,8 @@ class SupplierQuerySet(models.QuerySet):
         }
         if supplier:
             filter_kwargs['supplier'] = supplier
+        if brand:
+            filter_kwargs['car_model__brand'] = brand
         return self.filter(**filter_kwargs).order_by('price').first()
 
     def get_unique_suppliers_carshow(self, carshow) -> List[Manager[models.Model]]:
