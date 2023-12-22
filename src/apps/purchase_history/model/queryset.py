@@ -9,6 +9,12 @@ class PurchasesSalesHistoryQuerySet(models.QuerySet):
     def car_show_history(self, id) -> models.Manager[models.Model]:
         return self.filter(car_dealership_id=id, is_active=True).select_related('car_dealership', 'car_model', 'buyer', 'buyer__user')
 
+    def get_amount_carshow_buying(self, id) -> models.Manager[models.Model]:
+        return self.filter(car_dealership_id=id, is_active=True)
+
+    def get_amount_buyer_buying(self, id) -> models.Manager[models.Model]:
+        return self.filter(buyer_id=id, is_active=True)
+
     def buyer_history(self, id) -> models.Manager[models.Model]:
         return self.filter(buyer_id=id, is_active=True).select_related('car_dealership', 'car_model', 'buyer')
 
@@ -19,7 +25,7 @@ class PurchasesSalesHistoryQuerySet(models.QuerySet):
         return queryset.aggregate(total_profit=models.Sum('final_price'))
 
     def get_cars_amount(self, queryset) -> models.Manager[models.Model]:
-        return queryset.select_related('car_model').annotate(cars_amount=models.Count('car_model'))
+        return queryset.annotate(cars_amount=models.Count('car_model'))
 
     def get_cars(self, queryset) -> models.Manager[models.Model]:
         return queryset.annotate(final_model_profit=models.Sum('final_price'))

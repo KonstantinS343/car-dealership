@@ -26,7 +26,7 @@ class CarShowQuerySet(models.QuerySet):
         return self.filter(user__email_confirmed=True, is_active=True)
 
     def get_supplier_from_supplier_list(self, carshow) -> Manager[models.Model]:
-        return self.filter(car_dealership=carshow)
+        return self.filter(car_dealership=carshow, is_active=True)
 
     def get_unique_buyer(self, buyer) -> Manager[models.Model]:
         return self.filter(buyer=buyer, is_active=True)

@@ -79,7 +79,7 @@ def carshow_buy_car():
                     supplier=car_for_buy.supplier, car_dealership=shop, car_model=car_for_buy.car_model, final_price=new_price
                 )
 
-                purchase_amount = len(PurchasesSalesHistorySupplier.objects.car_show_history(id=shop.id))
+                purchase_amount = len(PurchasesSalesHistorySupplier.objects.get_amount_carshow_buying(id=shop.id))
 
                 if purchase_amount > 10:
                     UniqueBuyersSuppliers.objects.create(car_dealership=shop, supplier=car_for_buy.supplier)
@@ -143,10 +143,10 @@ def buyer_buy_car():
             PurchasesSalesHistoryСarShow.objects.create(
                 car_dealership=shop_car.car_dealership, buyer=client, car_model=car_for_buy.car_model, final_price=car_for_buy.price
             )
-            purchase_amount = len(PurchasesSalesHistoryСarShow.objects.buyer_history(id=client.id))
+            purchase_amount = len(PurchasesSalesHistoryСarShow.objects.get_amount_buyer_buying(id=client.id))
 
             if purchase_amount > 10:
-                UniqueBuyersCarDealership.objects.create(car_dealership=shop_car, buyer=client)
+                UniqueBuyersCarDealership.objects.create(car_dealership=shop_car.car_dealership, buyer=client)
             print(f'Buyer {client.user.username} BUY {car_for_buy.car_model.brand} PRICE {car_for_buy.price}')
 
 
@@ -194,7 +194,7 @@ def check_supplier_list():
                 CarDealershipSuppliersList.objects.create(car_dealership=shop, supplier=best_car_offer.supplier)
                 print(f'Car Dealership {shop.name} ADD NEW SUPPLIER {best_car_offer.supplier}')
             worst_car_offer = cars_for_buy[-1]
-            if worst_car_offer.supplier in suppliers_list and worst_car_offer != best_car_offer:
+            if worst_car_offer.supplier in suppliers_list and worst_car_offer != best_car_offer and len(cars_for_buy) > 2:
                 CarDealershipSuppliersList.objects.get(car_dealership=shop, supplier=worst_car_offer.supplier).delete()
                 print(f'Car Dealership {shop.name} DELETE SUPPLIER {worst_car_offer.supplier}')
         except IndexError:
