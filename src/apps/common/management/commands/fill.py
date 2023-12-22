@@ -77,7 +77,7 @@ class Command(BaseCommand):
         for i in range(50):
             random_carshow = random.choice(self.carshow_list)
             random_car = random.choice(self.car_list)
-            if not CarShowModel.object.filter(car_dealership=random_carshow, car_model=random_car):
+            if not CarShowModel.objects.filter(car_dealership=random_carshow, car_model=random_car):
                 CarShowModel.objects.create(
                     car_dealership=random_carshow,
                     car_model=random_car,

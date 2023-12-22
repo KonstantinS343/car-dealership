@@ -37,7 +37,7 @@ class ActionCarDealershipViewSet(viewsets.ModelViewSet):
         return super(self.__class__, self).get_permissions()
 
     def get_queryset(self) -> Manager[ActionCarDealership]:
-        return ActionCarDealership.objects.actions()
+        return ActionCarDealership.objects.action_carshow()
 
 
 class ActionSupplierViewSet(viewsets.ModelViewSet):
@@ -64,4 +64,4 @@ class ActionSupplierViewSet(viewsets.ModelViewSet):
         return super(self.__class__, self).get_permissions()
 
     def get_queryset(self) -> Manager[ActionSupplier]:
-        return ActionSupplier.objects.actions()
+        return ActionSupplier.objects.action_supplier()

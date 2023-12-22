@@ -38,6 +38,7 @@ DEBUG = env('DEBUG')
 ALLOWED_HOSTS = ['*']
 CORS_ALLOW_ALL_ORIGINS = True
 
+INTERNAL_IPS = ('127.0.0.1',)
 
 # Application definition
 
